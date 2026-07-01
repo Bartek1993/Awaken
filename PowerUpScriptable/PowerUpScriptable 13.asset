@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fffee95622f2de4bb6812977097314b, type: 3}
-  m_Name: PowerUpScriptable 3
+  m_Name: PowerUpScriptable 13
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
-  PowerUpName: MAX HP
-  PowerUpDescription: + 50 MAX HP
+  PowerUpName: PROJECTILE BOOST
+  PowerUpDescription: + 10% TO PROJECTILE RANGE
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
-  baseHp: 0
-  maxHp: 50
+  baseHp: 0.1
+  maxHp: 0
   hpRegenRate: 0
   baseDefense: 0
   projectileSpeed: 0
-  projectileRange: 0
+  projectileRange: 0.1
   invisibilityFramesRoll: 0
   invisibilityFramesAfterDamage: 0

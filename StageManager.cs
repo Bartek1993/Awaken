@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class StageManager : MonoBehaviour
 {
-    public ScripablePowerUP [] powerUps;
-    public Transform powerUpButtonsParent;
     public GameObject powerUpPanel;
     public GameObject stageGround;
     public GameObject player;
@@ -25,11 +23,12 @@ public class StageManager : MonoBehaviour
     public float spawnTimer;
     public Text waveText;
     public bool isWaveFinished;
-
     public Vector3 stageOffset;
+    PowerUpInstantiator powerUpInstantiator;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        powerUpInstantiator = FindFirstObjectByType<PowerUpInstantiator>();
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
         Screen.SetResolution(1920, 1080, true);
@@ -39,10 +38,11 @@ public class StageManager : MonoBehaviour
         cooldownTimer = 0.25f;
         canSpawn = true;
         waveCount = 1;
-        maxEnemySpawn = 10;
+        maxEnemySpawn = 5;
         enemiesToKill = maxEnemySpawn;
         killCount = 0;
         Screen.SetResolution(1920, 1080, true);
+        isWaveFinished = false;
     }
 
     // Update is called once per frame
@@ -53,24 +53,22 @@ public class StageManager : MonoBehaviour
         waveText.text = waveCount.ToString();
         if (killCount >= enemiesToKill)
         {
-            isWaveFinished = true;
-           // cooldownTimer  -= Time.deltaTime;
-            canSpawn = false;
-           // if (cooldownTimer <= 0)
-           // {
+            if (!isWaveFinished)
+            {
+                isWaveFinished = true;
+                canSpawn = false;
                 cooldownTimer = 2f;
                 waveCount += 1;
                 killCount = 0;
-                maxEnemySpawn += 2;
-                enemiesToKill = maxEnemySpawn;
                 canSpawn = true;
                 spawnCount = 0;
-                
                 if (waveCount % 2 == 0)
                 {
                     spawnRate += 1;
+                    maxEnemySpawn += 2;
                 }
-           // }
+                enemiesToKill = maxEnemySpawn;
+            }
         }
 
         if (spawnCount >= maxEnemySpawn)

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fffee95622f2de4bb6812977097314b, type: 3}
-  m_Name: PowerUpScriptable 3
+  m_Name: PowerUpScriptable 11
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
-  PowerUpName: MAX HP
-  PowerUpDescription: + 50 MAX HP
+  PowerUpName: HP RESTORE
+  PowerUpDescription: + 25% OF YOUR MAX HP
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
-  baseHp: 0
-  maxHp: 50
+  baseHp: 0.25
+  maxHp: 0
   hpRegenRate: 0
   baseDefense: 0
   projectileSpeed: 0

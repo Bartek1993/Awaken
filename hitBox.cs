@@ -33,10 +33,10 @@ public class hitBox : MonoBehaviour
     private void OnEnable()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        damage = player.GetComponent<PlayerStats>().weaponDamage;
-        hitboxRangeX = player.GetComponent<PlayerStats>().weaponRange;
-        hitboxRangeZ = player.GetComponent<PlayerStats>().weaponRange;
-        weaponDistance = player.GetComponent<PlayerStats>().weaponDistance;
+        damage = player.GetComponent<PlayerStats>().baseDamage;
+        hitboxRangeX = player.GetComponent<PlayerStats>().projectileRange;
+        hitboxRangeZ = player.GetComponent<PlayerStats>().projectileRange;
+        weaponDistance = player.GetComponent<PlayerStats>().projectileSpeed;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

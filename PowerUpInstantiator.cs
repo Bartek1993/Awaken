@@ -6,19 +6,23 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Random = System.Random;
 
-public class PowerUpRune : MonoBehaviour
+public class PowerUpInstantiator : MonoBehaviour
 {
     public ScripablePowerUP [] powerUps;
-    public GameObject player;
     public Transform powerUpButtonWindow;
     public GameObject buttonPrefab;
     private GameObject go;
     [SerializeField]private List<GameObject> buttons;
     public List<int> possibleID;
-
+    public bool closePowerUp;
+    public StageManager stageManager;
+    public PlayerStats playerStats;
     private void OnEnable()
     {
-        for (var i = 1; i < 12; i++)
+        playerStats = FindFirstObjectByType<PlayerStats>();
+        stageManager = FindFirstObjectByType<StageManager>();
+        closePowerUp = false;
+        for (var i = 1; i < powerUps.Length; i++)
         {
             possibleID.Add(i);
         }
@@ -30,17 +34,15 @@ public class PowerUpRune : MonoBehaviour
             possibleID.RemoveAt(randomIDIndex);
             go = Instantiate(buttonPrefab, powerUpButtonWindow);
             go.GetComponent<SkillButton>().buttonID = currentId;
+            string powerUpDetails = powerUps[currentId].PowerUpName +"\n"+ powerUps[currentId].PowerUpDescription;
+            go.GetComponent<SkillButton>().skillNameText.text = powerUpDetails;
+            go.GetComponent<Button>().onClick.AddListener(() => powerUps[currentId].OnClickButton(playerStats));
+            go.GetComponent<Button>().onClick.AddListener(() => stageManager.isWaveFinished = false);
             buttons.Add(go);
         }
         
     }
-
-    private void Start()
-    {
-        player = GameObject.FindGameObjectWithTag("Player");
-      
-      
-    }
+    
 
     private void OnDisable()
     {

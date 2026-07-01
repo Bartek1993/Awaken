@@ -10,11 +10,11 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public Text currentCashText, bankText;
     public Animator animator;
     public float extraAdrenalineGain;
-    public float hp, maxHp, adrenaline, maxAdrenaline;
+    public float hp, maxHp, hpRegenRate;
     public float weaponDamage, baseDamage;
     public float defence;
     public Image hpBar;
-    public float weaponRange, weaponDistance;
+    public float projectileRange, projectileSpeed;
     public float fireDamage;
     public float maxCritChance, critDamageMultiplier;
     public bool isCritical;
@@ -28,6 +28,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public GameObject comboRankPanel;
     public int comboKillCount, comboKillCountMax;
     public int currentCoins, totalCoins;
+    public float invisibilityFramesRoll, invisibilityFramesAfterDamage;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -38,14 +39,15 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         maxHp = 150;
         baseDamage = 10f;
         hp = maxHp;
-        adrenaline = 0;
-        weaponRange = 1.5f;
-        weaponDistance = 1.5f;
+        hpRegenRate = 0.01f;
+        projectileRange = 1.25f;
+        projectileSpeed = 1.25f;
         weaponDamage = baseDamage;
-        maxCritChance = 0.01f;
-        critDamageMultiplier = 1.01f;
-        maxAdrenaline = 50;
-       
+        maxCritChance = 0.001f;
+        critDamageMultiplier = 1.1f;
+        invisibilityFramesRoll = 0.1f;
+        invisibilityFramesAfterDamage = 0.1f;
+
     }
     
     // Update is called once per frame
@@ -71,6 +73,9 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         {
             hp = 0;
         }
+        
+        hp += hpRegenRate * Time.deltaTime;
+        hpBar.fillAmount = hp / maxHp;
     }
 
     private void ShieldMethod()
@@ -180,19 +185,24 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         {
             comboKillCountMax =  comboKillCount;
         }
-        CombatText.Spawn(TextStyle.DamagePlayer,"-" +damage, transform.position,null);
+        CombatText.Spawn(TextStyle.DamagePlayer,"-" +damage.ToString("F1"), transform.position,null);
         comboMeterFillAmount += 1f;
         comboKillCount = 0;
         comboRank = -1;
-        currentCoins = 0;
         if (hp <= 0)
         {
             Time.timeScale = 0.0001f;
         }
-        currentCoins *= comboRank;
-        CombatText.Spawn(TextStyle.Gold,"+ " +currentCoins, transform.position,null);
-        totalCoins += currentCoins;
-        currentCoins = 0;
+
+        if (currentCoins >= 0)
+        {
+            currentCoins *= comboRank;
+            CombatText.Spawn(TextStyle.Gold,"+ " +currentCoins, transform.position,null);
+            totalCoins += currentCoins;
+            currentCoins = 0;
+        }
+
+        
     }
 
     public void CollectReward()

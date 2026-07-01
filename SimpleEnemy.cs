@@ -42,19 +42,18 @@ public class SimpleEnemy : AbstractEnemy
 
     public override void TakeDamage(float damage)
     {
-        CombatText.Spawn(TextStyle.DamageEnemy,"-" +damage, transform.position, null);
+        CombatText.Spawn(TextStyle.DamageEnemy,"-" +damage.ToString("F1"), transform.position, null);
         hp -= damage;
         audioSource.PlayOneShot(audioClip[2]);
         GameObject go = Instantiate(bloodPrefabs[Random.Range(0, bloodPrefabs.Length)], transform.position, Quaternion.identity);
         Destroy(go, 1f);
         if (hp <= 0)
         {
+            capsule.enabled = false;
             animator.speed = 0;
            // audioSource.PlayOneShot(audioClip[Random.Range(0, 1)]);
-            Destroy(gameObject,0.2f);
-            float extraGain = player.GetComponent<PlayerStats>().extraAdrenalineGain;
-            player.GetComponent<PlayerStats>().adrenaline += 3f + extraGain;
-            capsule.enabled = false;
+            Destroy(gameObject,0.075f);
+           
         }
     }
     

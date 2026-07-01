@@ -1,0 +1,120 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class StageManager : MonoBehaviour
+{
+    public ScripablePowerUP [] powerUps;
+    public Transform powerUpButtonsParent;
+    public GameObject powerUpPanel;
+    public GameObject stageGround;
+    public GameObject player;
+    public Material stageGroundMaterial;
+    public int enemyCount;
+    public bool canSpawn;
+    public int maxEnemySpawn;
+    public int killCount;
+    public int enemiesToKill;
+    public int waveCount;
+    public float sec, min, hour;
+    public int spawnCount;
+    public float cooldownTimer;
+    public int spawnRate;
+    public float spawnTimer;
+    public Text waveText;
+    public bool isWaveFinished;
+
+    public Vector3 stageOffset;
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
+        Screen.SetResolution(1920, 1080, true);
+        player = GameObject.FindGameObjectWithTag("Player");
+        spawnTimer = 0.5f;
+        spawnRate = 2;
+        cooldownTimer = 0.25f;
+        canSpawn = true;
+        waveCount = 1;
+        maxEnemySpawn = 10;
+        enemiesToKill = maxEnemySpawn;
+        killCount = 0;
+        Screen.SetResolution(1920, 1080, true);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        powerUpPanel.SetActive(isWaveFinished);
+        stageGround.transform.position = player.transform.position +  stageOffset;
+        waveText.text = waveCount.ToString();
+        if (killCount >= enemiesToKill)
+        {
+            isWaveFinished = true;
+           // cooldownTimer  -= Time.deltaTime;
+            canSpawn = false;
+           // if (cooldownTimer <= 0)
+           // {
+                cooldownTimer = 2f;
+                waveCount += 1;
+                killCount = 0;
+                maxEnemySpawn += 2;
+                enemiesToKill = maxEnemySpawn;
+                canSpawn = true;
+                spawnCount = 0;
+                
+                if (waveCount % 2 == 0)
+                {
+                    spawnRate += 1;
+                }
+           // }
+        }
+
+        if (spawnCount >= maxEnemySpawn)
+        {
+            canSpawn = false;
+        }
+
+        if (maxEnemySpawn >= 100)
+        {
+            maxEnemySpawn = 100;
+            enemiesToKill = maxEnemySpawn;
+        }
+
+        if (isWaveFinished)
+        {
+            Time.timeScale = 0;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
+
+
+        StageTimer();
+    }
+
+   
+
+    private void StageTimer()
+    {
+        
+        
+        sec += Time.deltaTime;
+        if (sec > 59.9f)
+        {
+            min += 1;
+            sec = 0;
+        }
+        if (min > 59.0)
+        {
+            hour += 1;
+            min = 0;
+        }
+    }
+
+    
+}

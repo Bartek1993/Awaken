@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: PowerUpScriptable 15
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
   PowerUpName: PROJECTILE BOOST
-  PowerUpDescription: + 5% TO PROJECTILE SPEED
+  PowerUpDescription: OF CURRENT PROJECTILE SPEED
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
-  baseHp: 0.1
+  baseHp: 0
   maxHp: 0
   hpRegenRate: 0
   baseDefense: 0
-  projectileSpeed: 0.05
+  projectileSpeed: 0.1
   projectileRange: 0
   invisibilityFramesRoll: 0
   invisibilityFramesAfterDamage: 0

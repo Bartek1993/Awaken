@@ -13,7 +13,7 @@ public class ScripablePowerUP : ScriptableObject
     [Tooltip("Weapon Projectile Attributes")]
     public float projectileSpeed, projectileRange;
     [Tooltip("Player Speed and Movement Attributes")]
-    public float invisibilityFramesRoll, invisibilityFramesAfterDamage;
+    public float invisibilityFramesRoll, invisibilityFramesAfterDamage, playerSpeed;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void OnClickButton(PlayerStats playerStats)
@@ -26,10 +26,15 @@ public class ScripablePowerUP : ScriptableObject
         playerStats.hp += getHp;
         playerStats.maxHp += maxHp;
         playerStats.defence += baseDefense;
-        playerStats.projectileSpeed += projectileSpeed;
-        playerStats.projectileRange += projectileRange;
+        float getProjectileSPeed = playerStats.projectileSpeed * projectileSpeed;
+        playerStats.projectileSpeed += getProjectileSPeed;
+        float getProjectileRange = playerStats.projectileRange * projectileRange;
+        playerStats.projectileRange += getProjectileRange;
         playerStats.invisibilityFramesRoll += invisibilityFramesRoll;
         playerStats.invisibilityFramesAfterDamage += invisibilityFramesAfterDamage;
+        float getPlayerSpeed = playerStats.animator.speed * playerSpeed;
+        playerStats.animator.speed += getPlayerSpeed;
+        playerStats.hpRegenRate += hpRegenRate;
         Debug.Log("PowerUp Clicked");
         if (!playerStats)
         {

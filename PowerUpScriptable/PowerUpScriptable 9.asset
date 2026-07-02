@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: PowerUpScriptable 9
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
   PowerUpName: HP REGEN
-  PowerUpDescription: + 1% HP REGENERATION
+  PowerUpDescription: + 10% HP REGENERATION
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
   baseHp: 0
   maxHp: 0
-  hpRegenRate: 0.01
+  hpRegenRate: 0.1
   baseDefense: 0
   projectileSpeed: 0
   projectileRange: 0

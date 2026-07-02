@@ -54,7 +54,7 @@ public class hitBox : MonoBehaviour
           transform.localScale = new Vector3(hitboxRangeX,hitboxRangeY,hitboxRangeZ);
           transform.Translate(new Vector3(0,0,1) * weaponDistance * Time.deltaTime);
           timer += Time.deltaTime;
-          if (timer >= .5f)
+          if (timer >= 1f)
           {
               Destroy(gameObject);
           }
@@ -72,7 +72,11 @@ public class hitBox : MonoBehaviour
             }
 
             enemy.TakeDamage(damage);
-            player.GetComponent<PlayerStats>().comboMeterFillAmount += 5f;
+            if (enemy.GetComponent<Rigidbody>())
+            {
+                Debug.Log("enemy has rigidbody");
+            }
+
             if (player.GetComponent<PlayerStats>().isCritical)
             {
                 Debug.Log("critical damage dealt +" + damage);

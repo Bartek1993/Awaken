@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: PowerUpScriptable 11
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
   PowerUpName: HP RESTORE
-  PowerUpDescription: + 25% OF YOUR MAX HP
+  PowerUpDescription: + 5% OF YOUR MAX HP
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
-  baseHp: 0.25
+  baseHp: 0.05
   maxHp: 0
   hpRegenRate: 0
   baseDefense: 0

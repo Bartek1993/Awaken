@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: PowerUpScriptable 17
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
   PowerUpName: DEFENCE BOOST
-  PowerUpDescription: + 2 DEFENCE POINTS
+  PowerUpDescription: -10 FROM THE DAMAGE
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
   baseHp: 0
   maxHp: 0
   hpRegenRate: 0
-  baseDefense: 2
+  baseDefense: 10
   projectileSpeed: 0
   projectileRange: 0
   invisibilityFramesRoll: 0

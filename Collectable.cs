@@ -1,4 +1,5 @@
 using System;
+using DevPlz.CombatText;
 using UnityEngine;
 
 public interface ICollectable
@@ -15,16 +16,23 @@ public class Collectable : MonoBehaviour, ICollectable
     void Start()
     {
         player =  GameObject.FindGameObjectWithTag("Player");
+        Destroy(gameObject, 20f);
     }
 
     // Update is called once per frame
     void Update()
     {
+        transform.localScale -= transform.localScale * 0.1f * Time.deltaTime;
+        if (transform.localScale.x <= 0)
+        {
+            Destroy(gameObject);
+        }
+
         transform.Rotate(new Vector3(0, 360, 0) * Time.deltaTime);
         distance = Vector3.Distance(player.transform.position, transform.position);
-        if (distance <= 6f)
+        if (distance <= 2f)
         {
-            transform.position = Vector3.Lerp(transform.position, player.transform.position, 20f * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, player.transform.position + Vector3.up, 10f * Time.deltaTime);
         }
     }
 
@@ -34,6 +42,7 @@ public class Collectable : MonoBehaviour, ICollectable
         playerStats.CollectReward();
         Debug.Log("REWARDD");
         Destroy(gameObject,0.1f);
+        
     }
     
 

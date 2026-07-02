@@ -40,8 +40,8 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         baseDamage = 10f;
         hp = maxHp;
         hpRegenRate = 0.01f;
-        projectileRange = 1.25f;
-        projectileSpeed = 1.25f;
+        projectileRange = 0.85f;
+        projectileSpeed = 4f;
         weaponDamage = baseDamage;
         maxCritChance = 0.001f;
         critDamageMultiplier = 1.1f;
@@ -110,7 +110,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         }
 
        
-        bankText.text = totalCoins.ToString();
+        //bankText.text = totalCoins.ToString();
     }
 
     private void ComboMeterSetup()
@@ -124,11 +124,16 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
             comboRank += 1;
         }
         
+        if (comboRank == 1 && comboMeterFillAmount <0.25f)
+        {
+            comboRankPanel.SetActive(false);
+        }
+
         if (comboRank < 1)
         {
             comboRank = 1;
-            comboRankPanel.SetActive(false);
         }
+
         if(comboRank>=1)
         {
             comboRankPanel.SetActive(true);
@@ -145,27 +150,27 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
                 break;
             case 1:
                 comboRankText.text = "Mare Mortal";
-                comboMeterFillAmount -= 2.5f * Time.deltaTime;
+                comboMeterFillAmount -= 4.5f * Time.deltaTime;
                 break;
             case 2:
                 comboRankText.text = "Relentless Hunter";
-                comboMeterFillAmount -= 2.5f * Time.deltaTime;
+                comboMeterFillAmount -= 4.5f * Time.deltaTime;
                 break;
             case 3:
                 comboRankText.text = "Brutal !";
-                comboMeterFillAmount -= 2.5f * Time.deltaTime;
+                comboMeterFillAmount -= 4.5f * Time.deltaTime;
                 break;
             case 4:
                 comboRankText.text = "Absolute !";
-                comboMeterFillAmount -= 4.5f * Time.deltaTime;
+                comboMeterFillAmount -= 5.5f * Time.deltaTime;
                 break;
             case 5:
                 comboRankText.text = "Tyrant !";
-                comboMeterFillAmount -= 4.5f * Time.deltaTime;
+                comboMeterFillAmount -= 6.5f * Time.deltaTime;
                 break;
             case 6:
                 comboRankText.text = "Torment !";
-                comboMeterFillAmount -= 5.5f * Time.deltaTime;
+                comboMeterFillAmount -= 7.5f * Time.deltaTime;
                 break;
             case 7:
                 comboRankText.text = "Devour of Souls !";
@@ -196,10 +201,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
 
         if (currentCoins >= 0)
         {
-            currentCoins *= comboRank;
             CombatText.Spawn(TextStyle.Gold,"+ " +currentCoins, transform.position,null);
-            totalCoins += currentCoins;
-            currentCoins = 0;
         }
 
         
@@ -208,5 +210,6 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public void CollectReward()
     {
         currentCoins += 1;
+        CombatText.Spawn(TextStyle.Gold,"+1", transform.position,null);
     }
 }

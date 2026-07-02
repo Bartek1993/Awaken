@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PowerUpScriptable 13
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
   PowerUpName: PROJECTILE BOOST
-  PowerUpDescription: + 10% TO PROJECTILE RANGE
+  PowerUpDescription: + 10% OF CURRENT ATTACK RANGE
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0

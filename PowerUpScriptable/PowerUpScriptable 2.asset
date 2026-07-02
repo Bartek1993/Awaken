@@ -17,7 +17,7 @@ MonoBehaviour:
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
-  baseHp: 0
+  baseHp: 25
   maxHp: 25
   hpRegenRate: 0
   baseDefense: 0

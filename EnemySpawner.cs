@@ -4,6 +4,7 @@ public class EnemySpawner : Spawner
 {
     public StageManager stageManager;
     public bool canSpawn;
+    public float timerPosition;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -14,26 +15,51 @@ public class EnemySpawner : Spawner
     // Update is called once per frame
     void Update()
     {
+        positionCounter = 0;
+        enemyVariationMax = stageManager.enemyVariationMax;
         spawnRate = stageManager.spawnRate;
         spawnDelay = stageManager.spawnTimer;
         canSpawn = stageManager.canSpawn;
         distance = Vector3.Distance(player.transform.position, transform.position);
         spawntimer += Time.deltaTime;
+       
+
+
         if (spawntimer >= spawnDelay && canSpawn)
         {
+            spawnOffset[0] = new Vector3(Random.Range(Random.Range(10,17), 0f), 0, -12);
+            spawnOffset[1] = new Vector3(Random.Range(0, -10f), 0, 10);
+            spawnOffset[2] = new Vector3(-15, 0, Random.Range(Random.Range(15,20), 0f));
+            spawnOffset[3] = new Vector3(18, 0, Random.Range(0f, -10f)); 
             spawntimer = 0;
-            for (int i = 0; i < spawnRate; i++)
+            for (var i = 0; i < spawnRate; i++)
             {
+                
                 if (stageManager.spawnCount < stageManager.maxEnemySpawn)
                 {
-                    stageManager.spawnCount++;
-                    spawnOffset = new Vector3(Random.Range(-20f, 25f), 0.15f, Random.Range(-25f, 20f));
-                    GameObject go = Instantiate(objectsToSpawn[Random.Range(0, objectsToSpawn.Length)], player.transform.position + spawnOffset, Quaternion.identity);
+                    
+                    stageManager.spawnCount += 1;
+                    GameObject go = Instantiate(SimpleEnemies[Random.Range(0, enemyVariationMax )], player.transform.position + spawnOffset[Random.Range(0,3)], Quaternion.identity);
+                    switch (go.GetComponent<AbstractEnemy>().enemyType)
+                    {
+                        case AbstractEnemy.EnemyType.Tank:
+                            stageManager.waveWeight += 10f;
+                           
+                            break;
+                        default:
+                            stageManager.waveWeight += 0.15f;
+                            break;
+                    }
 
                 }
-            }
                 
+                
+            }
         }
+        
+        
+        
+       
 
      
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class hitBox : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public class hitBox : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         damage = player.GetComponent<PlayerStats>().baseDamage;
         hitboxRangeX = player.GetComponent<PlayerStats>().projectileRange;
-        hitboxRangeZ = player.GetComponent<PlayerStats>().projectileRange;
+        hitboxRangeZ = 1.8f;
         weaponDistance = player.GetComponent<PlayerStats>().projectileSpeed;
     }
 
@@ -66,14 +67,26 @@ public class hitBox : MonoBehaviour
     {
         if (other.TryGetComponent(out AbstractEnemy enemy))
         {
+            if (enemy.enemyType == AbstractEnemy.EnemyType.Tank)
+            {
+                Destroy(gameObject);
+            }
+
             if (!audioSource.isPlaying)
             {
                 audioSource.PlayOneShot(audioClip[0]);
             }
 
+            if (Random.value < player.GetComponent<PlayerStats>().maxCritChance)
+            {
+                damage += player.GetComponent<PlayerStats>().critDamageMultiplier;
+            }
+
             enemy.TakeDamage(damage);
             if (enemy.GetComponent<Rigidbody>())
             {
+                Rigidbody rb = enemy.GetComponent<Rigidbody>();
+                rb.AddForce(Vector3.back * 10 * Time.fixedDeltaTime, ForceMode.Impulse);
                 Debug.Log("enemy has rigidbody");
             }
 

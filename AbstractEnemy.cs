@@ -9,6 +9,12 @@ public interface ICommonMethods
 
 public abstract class AbstractEnemy : MonoBehaviour,  ICommonMethods
 {
+    public enum EnemyType
+    {
+        Normal, Tank, Magic, Elemental
+    }
+
+    public EnemyType enemyType;
     public float animatorStartSpeed;
     public AudioSource audioSource;
     public AudioClip [] audioClip;

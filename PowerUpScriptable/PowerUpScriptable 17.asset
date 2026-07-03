@@ -12,16 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fffee95622f2de4bb6812977097314b, type: 3}
   m_Name: PowerUpScriptable 17
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
-  PowerUpName: DEFENCE BOOST
-  PowerUpDescription: -10 FROM THE DAMAGE
+  card: 1
+  isPernament: 0
+  cardLevel: 2
+  PowerUpName: PROJECTILE BOOST
+  PowerUpDescription: PROJECTILE SPEED UP
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
   baseHp: 0
   maxHp: 0
   hpRegenRate: 0
-  baseDefense: 10
-  projectileSpeed: 0
+  baseDefense: 0
+  projectileSpeed: 0.01
   projectileRange: 0
   invisibilityFramesRoll: 0
   invisibilityFramesAfterDamage: 0
+  playerSpeed: 0

@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fffee95622f2de4bb6812977097314b, type: 3}
   m_Name: PowerUpScriptable 2
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
+  card: 2
+  isPernament: 0
+  cardLevel: 1
   PowerUpName: MAX HP
-  PowerUpDescription: + 25 MAX HP
+  PowerUpDescription: INCREASE MAX HP
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
@@ -25,3 +28,4 @@ MonoBehaviour:
   projectileRange: 0
   invisibilityFramesRoll: 0
   invisibilityFramesAfterDamage: 0
+  playerSpeed: 0

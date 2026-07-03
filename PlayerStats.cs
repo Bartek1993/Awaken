@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using DevPlz.CombatText;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,6 +8,7 @@ using Random = UnityEngine.Random;
 
 public class PlayerStats : MonoBehaviour, ICommonMethods
 {
+    public int totalEnemiesKilled;
     public Text currentCashText, bankText;
     public Animator animator;
     public float extraAdrenalineGain;
@@ -17,6 +19,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public float projectileRange, projectileSpeed;
     public float fireDamage;
     public float maxCritChance, critDamageMultiplier;
+    public float enemyStunTime;
     public bool isCritical;
     private float randomizeValue;
     public GameObject fireshield;
@@ -25,28 +28,30 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public float comboMeterFillAmount, comboMeterMaxAmountMax;
     public int comboRank;
     public Text comboRankText, comboKillCountText, maxComboKillCountText;
-    public GameObject comboRankPanel;
     public int comboKillCount, comboKillCountMax;
     public int currentCoins, totalCoins;
     public float invisibilityFramesRoll, invisibilityFramesAfterDamage;
+    public bool canTakeDamage;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        enemyStunTime = 0.05f;
+        canTakeDamage = true;
         animator = GetComponent<Animator>();
         comboRank = 1;
         comboMeterMaxAmountMax = 100;
         fireDamage = 10;
-        maxHp = 150;
+        maxHp = 100;
         baseDamage = 10f;
         hp = maxHp;
         hpRegenRate = 0.01f;
-        projectileRange = 0.85f;
-        projectileSpeed = 4f;
+        projectileRange = 0.75f;
+        projectileSpeed = 2f;
         weaponDamage = baseDamage;
-        maxCritChance = 0.001f;
-        critDamageMultiplier = 1.1f;
-        invisibilityFramesRoll = 0.1f;
-        invisibilityFramesAfterDamage = 0.1f;
+        maxCritChance = 0.005f;
+        critDamageMultiplier = 1.05f;
+        invisibilityFramesRoll = 0.5f;
+        invisibilityFramesAfterDamage = 0.15f;
 
     }
     
@@ -123,21 +128,12 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
             comboMeterFillAmount = 10;
             comboRank += 1;
         }
-        
-        if (comboRank == 1 && comboMeterFillAmount <0.25f)
-        {
-            comboRankPanel.SetActive(false);
-        }
 
         if (comboRank < 1)
         {
             comboRank = 1;
         }
-
-        if(comboRank>=1)
-        {
-            comboRankPanel.SetActive(true);
-        }
+        
 
         if (comboRank > 8)
         {
@@ -185,31 +181,47 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     
     public void TakeDamage(float damage)
     {
-        hp -= damage + defence;
-        if (comboKillCount > comboKillCountMax)
+        if (canTakeDamage)
         {
-            comboKillCountMax =  comboKillCount;
+            hp -= damage + defence;
+            StartCoroutine("InvincibleFramesDamage");
+            if (comboKillCount > comboKillCountMax)
+            {
+                comboKillCountMax =  comboKillCount;
+            }
+            CombatText.Spawn(TextStyle.DamagePlayer,"-" +damage.ToString("F1"), transform.position,null);
+            comboMeterFillAmount += 1f;
+            comboKillCount = 0;
+            comboRank = -1;
+            if (hp <= 0)
+            {
+                Time.timeScale = 0.0001f;
+            }
+            
         }
-        CombatText.Spawn(TextStyle.DamagePlayer,"-" +damage.ToString("F1"), transform.position,null);
-        comboMeterFillAmount += 1f;
-        comboKillCount = 0;
-        comboRank = -1;
-        if (hp <= 0)
-        {
-            Time.timeScale = 0.0001f;
-        }
+        
+        CombatText.Spawn(TextStyle.Dodge,"-" +"ENEMY MISSED", transform.position,null);
 
-        if (currentCoins >= 0)
-        {
-            CombatText.Spawn(TextStyle.Gold,"+ " +currentCoins, transform.position,null);
-        }
+       
 
         
+    }
+
+    private IEnumerator InvincibleFramesDamage()
+    {
+        canTakeDamage = false;
+        yield return new WaitForSeconds(invisibilityFramesAfterDamage);
+        canTakeDamage = true;
     }
 
     public void CollectReward()
     {
         currentCoins += 1;
         CombatText.Spawn(TextStyle.Gold,"+1", transform.position,null);
+    }
+
+    public void PowerUpNotifier(string notification)
+    {
+        CombatText.Spawn(TextStyle.Dialogue,"-" + notification, transform.position);
     }
 }

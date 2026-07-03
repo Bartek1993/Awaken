@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fffee95622f2de4bb6812977097314b, type: 3}
   m_Name: PowerUpScriptable 7
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
+  card: 0
+  isPernament: 0
+  cardLevel: 2
   PowerUpName: BASE ATTACK
-  PowerUpDescription: + 10% CURRENT BASE ATTACK
-  baseAttack: 0.1
+  PowerUpDescription: INCREASE BASE ATTACK
+  baseAttack: 0.02
   critDamageMultiplier: 0
   critChance: 0
   baseHp: 0
@@ -25,3 +28,4 @@ MonoBehaviour:
   projectileRange: 0
   invisibilityFramesRoll: 0
   invisibilityFramesAfterDamage: 0
+  playerSpeed: 0

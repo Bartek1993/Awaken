@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using a;
 using DevPlz.CombatText;
 using HUDIndicator;
@@ -46,22 +47,31 @@ public class SimpleEnemy : AbstractEnemy
         hp -= damage;
         audioSource.PlayOneShot(audioClip[2]);
         GameObject go = Instantiate(bloodPrefabs[Random.Range(0, bloodPrefabs.Length)], transform.position, Quaternion.identity);
+        StartCoroutine("SlowDown");
         Destroy(go, 1f);
         if (hp <= 0)
         {
             capsule.enabled = false;
             animator.speed = 0;
            // audioSource.PlayOneShot(audioClip[Random.Range(0, 1)]);
-            Destroy(gameObject,0.075f);
+            Destroy(gameObject,0.55f);
            
         }
     }
-    
+
+    private IEnumerator SlowDown()
+    {
+        animator.speed = 0;
+        yield return new WaitForSeconds(player.GetComponent<PlayerStats>().enemyStunTime);
+        animator.speed = animatorStartSpeed;
+    }
+
     private void OnDestroy()
     {
         
         stageManager.killCount++;
         player.GetComponent<PlayerStats>().comboKillCount += 1;
+        player.GetComponent<PlayerStats>().totalEnemiesKilled += 1;
         stageManager.enemyCount--;
         Vector3 coinPos = new Vector3(0, 1f, 0);
         GameObject go =Instantiate(rewards[Random.Range(0, rewards.Length)], transform.position+ coinPos, Quaternion.identity);

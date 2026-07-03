@@ -34,11 +34,12 @@ public class PowerUpInstantiator : MonoBehaviour
             possibleID.RemoveAt(randomIDIndex);
             go = Instantiate(buttonPrefab, powerUpButtonWindow);
             go.GetComponent<SkillButton>().buttonID = currentId;
-            string powerUpDetails = powerUps[currentId].PowerUpName +"\n"+ powerUps[currentId].PowerUpDescription;
+            string powerUpDetails = powerUps[currentId].PowerUpName +"\n \n"+"LV"+ powerUps[currentId].cardLevel+"\n \n"+ powerUps[currentId].PowerUpDescription;
             go.GetComponent<SkillButton>().skillNameText.text = powerUpDetails;
             go.GetComponent<Button>().onClick.AddListener(() => powerUps[currentId].OnClickButton(playerStats));
             go.GetComponent<Button>().onClick.AddListener(() => stageManager.isWaveFinished = false);
             buttons.Add(go);
+            
         }
         
     }

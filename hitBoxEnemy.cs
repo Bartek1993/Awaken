@@ -11,6 +11,7 @@ public class hitBoxEnemy : MonoBehaviour
         stageManager = FindFirstObjectByType<StageManager>();
         damage = GetComponentInParent<AbstractEnemy>().damage;
         damage += stageManager.waveCount;
+        transform.localScale = new Vector3(1.55f, transform.localScale.y, 1.55f);
     }
 
     // Update is called once per frame

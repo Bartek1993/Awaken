@@ -36,6 +36,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public bool canTakeDamage;
     public float iceChance, fireChance;
     public GameObject deathScreen;
+    public Text deathScreenText;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -78,9 +79,17 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     {
         if (hp <= 0)
         {
-            Time.timeScale = 0;
+            UIControllsButtons uiControllsButtons = FindFirstObjectByType<UIControllsButtons>();
+            uiControllsButtons.animator.speed = 0;
+            uiControllsButtons.attackID = 0;
+            uiControllsButtons.isAttacking = false;
+            uiControllsButtons.enabled = false;
+            StageManager go = FindFirstObjectByType<StageManager>();
+            deathScreenText.text = "TOTAL ENEMIES: " + totalEnemiesKilled+"\n"+
+                                   "TOTAL SCORE: " + totalEnemiesKilled + comboKillCountMax * go.waveCount;
             deathScreen.SetActive(true);
-            StartCoroutine("DisplayDeathScreen");
+            int score = totalEnemiesKilled * go.waveCount;
+            StartCoroutine(DisplayDeathScreen(score));
         }
         else
         {
@@ -90,10 +99,11 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         
     }
 
-    private IEnumerator DisplayDeathScreen()
+    private IEnumerator DisplayDeathScreen(int score)
     {
        
-       yield return new WaitForSecondsRealtime(1f);
+       yield return new WaitForSecondsRealtime(2.5f);
+       PlayerPrefs.SetInt("score",score);
        SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
 

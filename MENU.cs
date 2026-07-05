@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class MENU : MonoBehaviour
 {
@@ -10,19 +11,24 @@ public class MENU : MonoBehaviour
     public Text waveText;
     public int difficulty;
     public Text difficultyText;
-
+    public Text scoreText;
+    public int score;
+    public AudioSource audioSourceButtons;
+    public AudioClip[]  buttonClick;
     private string difficutyName;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         startWave = 1;
         difficulty = 1;
+        score = PlayerPrefs.GetInt("score");
         
     }
 
     // Update is called once per frame
     void Update()
     {
+        scoreText.text = score.ToString();
         waveText.text = "ENTRY WAVE " + startWave.ToString();
         difficultyText.text = difficutyName;
         startWave = Mathf.RoundToInt(waveSlider.value);
@@ -57,5 +63,13 @@ public class MENU : MonoBehaviour
     {
         difficulty += 1;
     }
-    
+
+    public void buttonSound()
+    {
+        audioSourceButtons.pitch = Random.Range(1f, 1.1f);
+        audioSourceButtons.PlayOneShot(buttonClick[0]);
+
+        
+    }
+
 }

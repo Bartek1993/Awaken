@@ -9,6 +9,7 @@ public class SpriteManager : MonoBehaviour
     public GameObject player;
     public Camera playerCamera;
     Vector3 targetPosition;
+    public bool isPotatoMode;
 
     public float timer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -16,7 +17,7 @@ public class SpriteManager : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         playerCamera = Camera.main;
-        for (int a = 0; a < 5000; a++)
+        for (int a = 0; a < 7000; a++)
         {
             GameObject sprite = spritePrefabs[Random.Range(0, spritePrefabs.Length)];
             sprite.transform.localScale = new Vector3(Random.Range(0.8f,1.1f), Random.Range(1.1f,1.25f), 1);
@@ -35,19 +36,23 @@ public class SpriteManager : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (timer >= 0.15f)
+        if (isPotatoMode)
         {
-            targetPosition = playerCamera.transform.position;
-            targetPosition.y = 0;
-            foreach (GameObject sprite in stageSprites)
+            if (timer >= 0.15f)
             {
+                targetPosition = playerCamera.transform.position;
+                targetPosition.y = 0;
+                foreach (GameObject sprite in stageSprites)
+                {
             
-                sprite.transform.LookAt(new Vector3(targetPosition.x, sprite.transform.position.y, targetPosition.z));
-                sprite.transform.Rotate(0, 180, 0);
+                    sprite.transform.LookAt(new Vector3(targetPosition.x, sprite.transform.position.y, targetPosition.z));
+                    sprite.transform.Rotate(0, 180, 0);
             
+                }
+                timer = 0;
             }
-            timer = 0;
-        }
       
+        }
+        
     }
 }

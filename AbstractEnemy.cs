@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using HUDIndicator;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ public abstract class AbstractEnemy : MonoBehaviour,  ICommonMethods
         Normal, Tank, Magic, Elemental
     }
 
+    public GameObject onEntryObject;
     public EnemyType enemyType;
     public float animatorStartSpeed;
     public AudioSource audioSource;
@@ -33,9 +35,13 @@ public abstract class AbstractEnemy : MonoBehaviour,  ICommonMethods
     public IndicatorOffScreen offScreen;
     public float multiplier;
     public GameObject[] rewards;
+    //public int waveDifficulty;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        
+       
         
         
     }
@@ -62,7 +68,8 @@ public abstract class AbstractEnemy : MonoBehaviour,  ICommonMethods
 
 
     public abstract void TakeDamage(float damage);
-
+    public abstract IEnumerator isOnFire();
+    public abstract IEnumerator isOnFrozen();
     public void GetHitBox()
     {
         GameObject go = Instantiate(hitBox, transform.position, Quaternion.identity);

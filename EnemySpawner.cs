@@ -27,10 +27,10 @@ public class EnemySpawner : Spawner
 
         if (spawntimer >= spawnDelay && canSpawn)
         {
-            spawnOffset[0] = new Vector3(Random.Range(Random.Range(10,17), 0f), 0, -12);
-            spawnOffset[1] = new Vector3(Random.Range(0, -10f), 0, 10);
-            spawnOffset[2] = new Vector3(-15, 0, Random.Range(Random.Range(15,20), 0f));
-            spawnOffset[3] = new Vector3(18, 0, Random.Range(0f, -10f)); 
+            spawnOffset[0] = new Vector3(Random.Range(Random.Range(5,17), 0f), 0, -10);
+            spawnOffset[1] = new Vector3(Random.Range(0, -7f), 0, 7);
+            spawnOffset[2] = new Vector3(-10, 0, Random.Range(Random.Range(10,17), 0f));
+            spawnOffset[3] = new Vector3(11, 0, Random.Range(0f, -9f)); 
             spawntimer = 0;
             for (var i = 0; i < spawnRate; i++)
             {

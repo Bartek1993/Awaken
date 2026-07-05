@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fffee95622f2de4bb6812977097314b, type: 3}
+  m_Name: PowerUpScriptable 41
+  m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
+  card: 3
+  isPernament: 0
+  cardLevel: 1
+  PowerUpName: ELEMENTAL ICE
+  PowerUpDescription: chance of freezing enemy
+  baseAttack: 0
+  critDamageMultiplier: 0
+  critChance: 0
+  baseHp: 0
+  maxHp: 0
+  hpRegenRate: 0
+  baseDefense: 0
+  projectileSpeed: 0
+  projectileRange: 0
+  invisibilityFramesRoll: 0
+  invisibilityFramesAfterDamage: 0
+  playerSpeed: 0
+  enemyStopTime: 0
+  iceChance: 0.01
+  fireChance: 0

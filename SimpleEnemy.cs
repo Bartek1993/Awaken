@@ -12,14 +12,17 @@ public class SimpleEnemy : AbstractEnemy
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        //waveDifficulty = stageManager.difficulty;
+        GameObject go = Instantiate(onEntryObject,transform.position,transform.rotation);
+        go.transform.parent = null;
+        Destroy(go,1);
         offScreen = GetComponent<IndicatorOffScreen>();
         capsule = GetComponent<CapsuleCollider>();
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
         stageManager = FindAnyObjectByType<StageManager>();
-        hp = Random.Range(minHp, maxHp) * (stageManager.waveCount + 1);
+        hp = Random.Range(minHp, maxHp) * (stageManager.waveCount + 0.5f ) * stageManager.difficulty;
         stageManager.enemyCount++;
         if (stageManager.waveCount % 1 == 0)
         {
@@ -30,7 +33,9 @@ public class SimpleEnemy : AbstractEnemy
         {
             animator.speed = 2.5f;
         }
+
         animator.speed = animatorStartSpeed;
+        damage *= stageManager.difficulty;
 
     }
 
@@ -46,17 +51,39 @@ public class SimpleEnemy : AbstractEnemy
         CombatText.Spawn(TextStyle.DamageEnemy,"-" +damage.ToString("F1"), transform.position, null);
         hp -= damage;
         audioSource.PlayOneShot(audioClip[2]);
-        GameObject go = Instantiate(bloodPrefabs[Random.Range(0, bloodPrefabs.Length)], transform.position, Quaternion.identity);
-        StartCoroutine("SlowDown");
+        GameObject go = Instantiate(bloodPrefabs[Random.Range(0, bloodPrefabs.Length)], transform.position+ Vector3.up, Quaternion.identity);
+        if (enemyType != EnemyType.Tank)
+        {
+            StartCoroutine("SlowDown");
+        }
+        
         Destroy(go, 1f);
         if (hp <= 0)
         {
             capsule.enabled = false;
             animator.speed = 0;
            // audioSource.PlayOneShot(audioClip[Random.Range(0, 1)]);
-            Destroy(gameObject,0.55f);
+            Destroy(gameObject,0.1f);
            
         }
+    }
+
+    public override IEnumerator isOnFire()
+    {
+        CombatText.Spawn(TextStyle.DamagePlayer,"ON FIRE", transform.position,null);
+        TakeDamage(0.05f * Time.deltaTime);
+        yield return new WaitForSeconds(0.5f);
+        yield return null;
+
+    }
+
+    public override IEnumerator isOnFrozen()
+    {
+        CombatText.Spawn(TextStyle.DamagePlayer,"FROZEN", transform.position,null);
+        animator.speed = 0;
+        yield return new WaitForSeconds(Random.Range(1f, 1.5f));
+        animator.speed = animatorStartSpeed;
+        yield return null;
     }
 
     private IEnumerator SlowDown()
@@ -68,7 +95,9 @@ public class SimpleEnemy : AbstractEnemy
 
     private void OnDestroy()
     {
-        
+        GameObject exitObject = Instantiate(onEntryObject,transform.position,transform.rotation);
+        exitObject.transform.parent = null;
+        Destroy(exitObject,0.5f);
         stageManager.killCount++;
         player.GetComponent<PlayerStats>().comboKillCount += 1;
         player.GetComponent<PlayerStats>().totalEnemiesKilled += 1;

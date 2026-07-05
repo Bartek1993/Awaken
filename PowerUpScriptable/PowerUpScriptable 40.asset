@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fffee95622f2de4bb6812977097314b, type: 3}
-  m_Name: PowerUpScriptable 31
+  m_Name: PowerUpScriptable 40
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
   card: 3
   isPernament: 0
-  cardLevel: 3
-  PowerUpName: SPECIAL
-  PowerUpDescription: ENEMY STUNNED FOR LONGER AFTER TAKING DAMAGE
+  cardLevel: 1
+  PowerUpName: ELEMENTAL FIRE
+  PowerUpDescription: chance of dealing fire damage
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
@@ -29,4 +29,6 @@ MonoBehaviour:
   invisibilityFramesRoll: 0
   invisibilityFramesAfterDamage: 0
   playerSpeed: 0
-  enemyStopTime: 0.05
+  enemyStopTime: 0
+  iceChance: 0
+  fireChance: 0.01

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class StageManager : MonoBehaviour
 {
+    public int waveStartnumber;
+    public int difficulty;
     public GameObject powerUpPanel;
     public GameObject stageGround;
     public GameObject player;
@@ -29,7 +31,9 @@ public class StageManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        enemyVariationMax = 2;
+        waveStartnumber = PlayerPrefs.GetInt("startWave");
+        difficulty = PlayerPrefs.GetInt("wavedifficulty");
+        enemyVariationMax = 2 * difficulty;
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
         Screen.SetResolution(1920, 1080, true);
@@ -38,8 +42,8 @@ public class StageManager : MonoBehaviour
         spawnRate = 1;
         cooldownTimer = 0.25f;
         canSpawn = true;
-        waveCount = 1;
-        maxEnemySpawn = 20;
+        waveCount = waveStartnumber;
+        maxEnemySpawn = 10 * waveStartnumber;
         enemiesToKill = maxEnemySpawn;
         killCount = 0;
         Screen.SetResolution(1920, 1080, true);
@@ -76,7 +80,7 @@ public class StageManager : MonoBehaviour
                 }
                 
                 
-                if (waveCount % 10 == 0)
+                if (waveCount % 5 == 0)
                 {
                     enemyVariationMax += 1;
                     spawnTimer += 0.015f;

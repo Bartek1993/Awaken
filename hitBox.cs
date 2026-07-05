@@ -16,7 +16,8 @@ public class hitBox : MonoBehaviour
     public GameObject slashRotObject;
     public AudioSource audioSource;
     public AudioClip [] audioClip;
-
+    public GameObject[] hitFX;
+    public float iceValue, fireValue;
     private void OnDisable()
     {
         timer = 0;
@@ -43,8 +44,16 @@ public class hitBox : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
-
+        fireValue = Random.value;
+        iceValue = Random.value;
+        if (iceValue < player.GetComponent<PlayerStats>().iceChance)
+        {
+            hitFX[0].SetActive(true);
+        }
+        if (fireValue < player.GetComponent<PlayerStats>().fireChance)
+        {
+            hitFX[1].SetActive(true);
+        }
     }
 
     // Update is called once per frame
@@ -82,18 +91,18 @@ public class hitBox : MonoBehaviour
                 damage += player.GetComponent<PlayerStats>().critDamageMultiplier;
             }
 
-            enemy.TakeDamage(damage);
-            if (enemy.GetComponent<Rigidbody>())
+            if (fireValue < player.GetComponent<PlayerStats>().fireChance)
             {
-                Rigidbody rb = enemy.GetComponent<Rigidbody>();
-                rb.AddForce(Vector3.back * 10 * Time.fixedDeltaTime, ForceMode.Impulse);
-                Debug.Log("enemy has rigidbody");
+                enemy.StartCoroutine(enemy.isOnFire());
+               
+            }
+            if (iceValue < player.GetComponent<PlayerStats>().iceChance)
+            {
+                enemy.StartCoroutine(enemy.isOnFrozen());
+                hitFX[0].SetActive(true);
             }
 
-            if (player.GetComponent<PlayerStats>().isCritical)
-            {
-                Debug.Log("critical damage dealt +" + damage);
-            }
+            enemy.TakeDamage(damage);
         }
     }
 

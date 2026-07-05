@@ -12,7 +12,7 @@ public class ScripablePowerUP : ScriptableObject
     }
     public cardType card;
     public bool isPernament;
-    public int cardLevel = Random.Range(1,3);
+    public int cardLevel;
     public string PowerUpName, PowerUpDescription;
     [Tooltip("Attack Attributes")]
     public float baseAttack, critDamageMultiplier, critChance;
@@ -24,8 +24,7 @@ public class ScripablePowerUP : ScriptableObject
     public float projectileSpeed, projectileRange;
     [Tooltip("Player Speed and Movement Attributes")]
     public float invisibilityFramesRoll, invisibilityFramesAfterDamage, playerSpeed;
-
-    [Tooltip("SPECIAL Attributes")] public float enemyStopTime;
+    [Tooltip("SPECIAL Attributes")] public float enemyStopTime, iceChance, fireChance;
     
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -49,6 +48,8 @@ public class ScripablePowerUP : ScriptableObject
         playerStats.animator.speed += getPlayerSpeed;
         playerStats.hpRegenRate += hpRegenRate;
         playerStats.enemyStunTime += enemyStopTime;
+        playerStats.iceChance += iceChance;
+        playerStats.fireChance += fireChance;
         Debug.Log("PowerUp Clicked");
         playerStats.PowerUpNotifier("POP UP");
         

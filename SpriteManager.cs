@@ -17,10 +17,10 @@ public class SpriteManager : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         playerCamera = Camera.main;
-        for (int a = 0; a < 7000; a++)
+        for (int a = 0; a < 20000; a++)
         {
             GameObject sprite = spritePrefabs[Random.Range(0, spritePrefabs.Length)];
-            sprite.transform.localScale = new Vector3(Random.Range(0.8f,1.1f), Random.Range(1.1f,1.25f), 1);
+            sprite.transform.localScale = new Vector3(Random.Range(0.8f,0.9f), Random.Range(0.9f,0.95f), 1);
             Instantiate(sprite, player.transform.position + new Vector3(Random.Range(-300,200),0.1f,Random.Range(-300,200)), sprite.transform.rotation);
         }
         stageSprites = GameObject.FindGameObjectsWithTag("Sprite");

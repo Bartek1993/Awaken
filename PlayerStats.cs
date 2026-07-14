@@ -15,18 +15,18 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public Animator animator;
     public float extraAdrenalineGain;
     public float hp, maxHp, hpRegenRate;
-    public float weaponDamage, baseDamage;
+    public float baseDamage;
+    public float mana, maxMana, manaRegenRate;
     public float defence;
     public Image hpBar;
     public float projectileRange, projectileSpeed;
-    public float fireDamage;
+    public float fireDamage, iceDamage, earthDamage;
     public float maxCritChance, critDamageMultiplier;
     public float enemyStunTime;
-    public bool isCritical;
     private float randomizeValue;
     public GameObject fireshield;
     public bool fireShieldOn;
-    public Image comboMeter;
+    public Image comboMeter, manaMeter;
     public float comboMeterFillAmount, comboMeterMaxAmountMax;
     public int comboRank;
     public Text comboRankText, comboKillCountText, maxComboKillCountText;
@@ -37,28 +37,36 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public float iceChance, fireChance;
     public GameObject deathScreen;
     public Text deathScreenText;
+    public float magicCooldown, magicConsumption;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        
+        maxMana = 100;
+        mana = maxMana;
+        manaRegenRate = 5f;
         iceChance = 0.01f;
         fireChance = 0.01f;
-        enemyStunTime = 0.025f;
+        enemyStunTime = 0.085f;
         canTakeDamage = true;
         animator = GetComponent<Animator>();
         comboRank = 1;
         comboMeterMaxAmountMax = 100;
-        fireDamage = 10;
-        maxHp = 200;
-        baseDamage = 8f;
+        fireDamage = 2.5f;
+        iceDamage = 1f;
+        earthDamage = 1.5f;
+        maxHp = 100;
         hp = maxHp;
         hpRegenRate = 0.01f;
-        projectileRange = 1.1f;
-        projectileSpeed = 3f;
-        weaponDamage = baseDamage;
-        maxCritChance = 0.005f;
+        baseDamage = 10f;
+        projectileRange = 1f;
+        projectileSpeed = 4f;
+        maxCritChance = 0.01f;
         critDamageMultiplier = 1.05f;
-        invisibilityFramesRoll = 0.5f;
+        invisibilityFramesRoll = 0.75f;
         invisibilityFramesAfterDamage = 0.15f;
+        magicCooldown = 5f;
+        magicConsumption = 15f;
 
     }
     
@@ -79,16 +87,15 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     {
         if (hp <= 0)
         {
+            deathScreen.SetActive(true);
             UIControllsButtons uiControllsButtons = FindFirstObjectByType<UIControllsButtons>();
             uiControllsButtons.animator.speed = 0;
             uiControllsButtons.attackID = 0;
             uiControllsButtons.isAttacking = false;
             uiControllsButtons.enabled = false;
-            StageManager go = FindFirstObjectByType<StageManager>();
-            deathScreenText.text = "TOTAL ENEMIES: " + totalEnemiesKilled+"\n"+
-                                   "TOTAL SCORE: " + totalEnemiesKilled + comboKillCountMax * go.waveCount;
-            deathScreen.SetActive(true);
-            int score = totalEnemiesKilled * go.waveCount;
+            var go = FindFirstObjectByType<StageManager>();
+            var score = (totalEnemiesKilled * go.waveCount) * go.difficulty ;
+            deathScreenText.text = "TOTAL SCORE: " + score;
             StartCoroutine(DisplayDeathScreen(score));
         }
         else
@@ -104,7 +111,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
        
        yield return new WaitForSecondsRealtime(2.5f);
        PlayerPrefs.SetInt("score",score);
-       SceneManager.LoadScene(0, LoadSceneMode.Single);
+       SceneManager.LoadScene(1, LoadSceneMode.Single);
     }
 
     private void SetBaseAttributes()
@@ -117,6 +124,14 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         
         hp += hpRegenRate * Time.deltaTime;
         hpBar.fillAmount = hp / maxHp;
+
+        if (mana > maxMana)
+        {
+            mana = maxMana;
+        }
+        mana += manaRegenRate * Time.deltaTime;
+        manaMeter.fillAmount = mana / maxMana;
+        
     }
 
     private void ShieldMethod()

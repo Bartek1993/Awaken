@@ -22,7 +22,7 @@ public class SimpleEnemy : AbstractEnemy
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
         stageManager = FindAnyObjectByType<StageManager>();
-        hp = Random.Range(minHp, maxHp) * (stageManager.waveCount + 0.5f ) * stageManager.difficulty;
+        hp = Random.Range(minHp* stageManager.difficulty, maxHp* stageManager.difficulty) ;
         stageManager.enemyCount++;
         if (stageManager.waveCount % 1 == 0)
         {
@@ -50,7 +50,11 @@ public class SimpleEnemy : AbstractEnemy
     {
         CombatText.Spawn(TextStyle.DamageEnemy,"-" +damage.ToString("F1"), transform.position, null);
         hp -= damage;
-        audioSource.PlayOneShot(audioClip[2]);
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(audioClip[2]);
+        }
+
         GameObject go = Instantiate(bloodPrefabs[Random.Range(0, bloodPrefabs.Length)], transform.position+ Vector3.up, Quaternion.identity);
         if (enemyType != EnemyType.Tank)
         {

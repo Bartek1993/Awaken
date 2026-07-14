@@ -11,6 +11,8 @@ public class StageManager : MonoBehaviour
     public GameObject powerUpPanel;
     public GameObject stageGround;
     public GameObject player;
+    public AudioSource stageMusic;
+    public AudioClip[] songs;
     public Material stageGroundMaterial;
     public int enemyCount;
     public bool canSpawn;
@@ -38,15 +40,14 @@ public class StageManager : MonoBehaviour
         Application.targetFrameRate = 60;
         Screen.SetResolution(1920, 1080, true);
         player = GameObject.FindGameObjectWithTag("Player");
-        spawnTimer = 1f;
+        spawnTimer = 0.75f;
         spawnRate = 1;
         cooldownTimer = 0.25f;
         canSpawn = true;
         waveCount = waveStartnumber;
-        maxEnemySpawn = 10 * waveStartnumber;
+        maxEnemySpawn = 35 * waveStartnumber;
         enemiesToKill = maxEnemySpawn;
         killCount = 0;
-        Screen.SetResolution(1920, 1080, true);
         isWaveFinished = false;
         
     }
@@ -54,6 +55,10 @@ public class StageManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!stageMusic.isPlaying)
+        {
+            stageMusic.PlayOneShot(songs[Random.Range(0, songs.Length)]);
+        }
         powerUpPanel.SetActive(isWaveFinished);
         stageGround.transform.position = player.transform.position +  stageOffset;
         waveText.text = waveCount.ToString();
@@ -74,6 +79,7 @@ public class StageManager : MonoBehaviour
                 canSpawn = true;
                 spawnCount = 0;
                 waveWeight = 0;
+                spawnTimer -= 0.05f;
                 if (waveCount % 2 == 0)
                 {
                     maxEnemySpawn += 2;
@@ -83,13 +89,9 @@ public class StageManager : MonoBehaviour
                 if (waveCount % 5 == 0)
                 {
                     enemyVariationMax += 1;
-                    spawnTimer += 0.015f;
+                    
                     
                 }
-                
-                
-                
-                
                 enemiesToKill = maxEnemySpawn;
             }
         }
@@ -121,6 +123,11 @@ public class StageManager : MonoBehaviour
             Time.timeScale = 1;
         }
 
+        if (spawnTimer <= 0.25f)
+        {
+            spawnTimer = 0.25f;
+        }
+
 
         StageTimer();
         if (enemyVariationMax > 5)
@@ -136,12 +143,12 @@ public class StageManager : MonoBehaviour
         
         
         sec += Time.deltaTime;
-        if (sec > 59.9f)
+        if (sec > 59.99f)
         {
             min += 1;
             sec = 0;
         }
-        if (min > 59.0)
+        if (min > 59.9)
         {
             hour += 1;
             min = 0;

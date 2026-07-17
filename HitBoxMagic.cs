@@ -3,13 +3,14 @@ using UnityEngine;
 
 public class HitBoxMagic : MonoBehaviour
 {
-    public GameObject iceAge, fireStorm, earthBound;
+    public GameObject iceAge, fireStorm, earthBound, thunderStorm;
     public UIControllsButtons uiControlls;
     public PlayerStats playerStats;
     public int getMagicID;
     public float timer = 0f;
-    public LayerMask vegetationMask;
+    public LayerMask vegetationMask, enemyMask;
     public GameObject fireObject;
+    public float hitboxSize;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,9 +19,20 @@ public class HitBoxMagic : MonoBehaviour
         switch (getMagicID)
         {
             case 0:
+                hitboxSize = 2;
                 iceAge.SetActive(true);
                 break;
             case 1:
+                hitboxSize = 2;
+                Collider [] colliders = Physics.OverlapSphere(transform.position, 5f, vegetationMask);
+                foreach (Collider col in colliders)
+                {
+                    GameObject fire = Instantiate(fireObject, col.transform.position, col.transform.rotation);
+                    fire.transform.localScale = col.transform.localScale;
+                    fire.transform.parent = null;
+                    Destroy(fire, 10f);
+                    Destroy(col.gameObject,3);
+                }
                 fireStorm.SetActive(true);
                 break;
             case 2:
@@ -32,7 +44,7 @@ public class HitBoxMagic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        transform.localScale = new Vector3(hitboxSize, 1.5f, hitboxSize);
         timer += Time.deltaTime;
     }
 
@@ -43,22 +55,21 @@ public class HitBoxMagic : MonoBehaviour
             switch (getMagicID)
             {
                 case 0:
-
+                    StartCoroutine(enemy.isOnFrozen());
                     break;
                 case 1:
-                    Collider [] colliders = Physics.OverlapSphere(transform.position, 5f, vegetationMask);
+                   
+                    enemy.TakeDamage(playerStats.fireDamage);
+                    Collider[] colliders = Physics.OverlapSphere(transform.position, hitboxSize, enemyMask);
                     foreach (Collider col in colliders)
                     {
                         GameObject fire = Instantiate(fireObject, col.transform.position, col.transform.rotation);
-                        fire.transform.localScale = col.transform.localScale;
-                        Destroy(fire, 8f);
-                        Destroy(col.gameObject,5);
-            
+                        Destroy(fire, 2f);
                     }
-                    enemy.TakeDamage(playerStats.fireDamage);
+
                     break;
                 case 2:
-                    enemy.TakeDamage(playerStats.fireDamage);
+                    enemy.TakeDamage(playerStats.earthDamage);
                     break;
             }
         }
@@ -83,7 +94,7 @@ public class HitBoxMagic : MonoBehaviour
                     }
                     break;
                 case 1:
-                    if (timer > 0.15f)
+                    if (timer > 0.25f)
                     {
                         timer = 0;
                         enemy.TakeDamage(playerStats.fireDamage);
@@ -95,7 +106,7 @@ public class HitBoxMagic : MonoBehaviour
                     if (timer > 0.15f)
                     {
                         timer = 0;
-                        enemy.TakeDamage(playerStats.fireDamage);
+                        enemy.TakeDamage(playerStats.earthDamage);
                     }
                     break;
             }

@@ -40,12 +40,12 @@ public class StageManager : MonoBehaviour
         Application.targetFrameRate = 60;
         Screen.SetResolution(1920, 1080, true);
         player = GameObject.FindGameObjectWithTag("Player");
-        spawnTimer = 0.75f;
+        spawnTimer = 0.65f;
         spawnRate = 1;
-        cooldownTimer = 0.25f;
+        cooldownTimer = 1f;
         canSpawn = true;
         waveCount = waveStartnumber;
-        maxEnemySpawn = 35 * waveStartnumber;
+        maxEnemySpawn = (40 + difficulty) * waveStartnumber;
         enemiesToKill = maxEnemySpawn;
         killCount = 0;
         isWaveFinished = false;
@@ -80,9 +80,12 @@ public class StageManager : MonoBehaviour
                 spawnCount = 0;
                 waveWeight = 0;
                 spawnTimer -= 0.05f;
-                if (waveCount % 2 == 0)
+                if (waveCount % 1 == 0)
                 {
-                    maxEnemySpawn += 2;
+                    maxEnemySpawn += 10;
+                    int skillpoint = PlayerPrefs.GetInt("currentSkillPoints");
+                    PlayerPrefs.SetInt("currentSkillPoints", skillpoint + 1);
+                    
                 }
                 
                 
@@ -91,7 +94,11 @@ public class StageManager : MonoBehaviour
                     enemyVariationMax += 1;
                     
                     
+                    
                 }
+
+                
+
                 enemiesToKill = maxEnemySpawn;
             }
         }
@@ -101,10 +108,10 @@ public class StageManager : MonoBehaviour
             canSpawn = false;
         }
 
-        if (waveWeight >= 100)
+        if (waveWeight >= 200)
         {
             canSpawn = false;
-            waveWeight = 100;
+            waveWeight = 300;
             enemiesToKill = spawnCount;
         }
 

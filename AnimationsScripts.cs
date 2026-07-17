@@ -24,7 +24,6 @@ public class AnimationsScripts : MonoBehaviour
         vController = GetComponent<vThirdPersonController>();
         uiControllsButtons = FindFirstObjectByType<UIControllsButtons>();
        // animator.enabled = false;
-        animator.speed = 0.45f;
         animationFrameTime = 1f / targetAnimationFrame;
     }
 

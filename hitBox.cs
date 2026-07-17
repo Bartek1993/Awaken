@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -18,6 +19,8 @@ public class hitBox : MonoBehaviour
     public AudioClip [] audioClip;
     public GameObject[] hitFX;
     public float iceValue, fireValue;
+    public bool isCameraShake;
+    public CinemachineBasicMultiChannelPerlin [] basicMultiChannelPerlin;
     private void OnDisable()
     {
         timer = 0;
@@ -34,16 +37,22 @@ public class hitBox : MonoBehaviour
 
     private void OnEnable()
     {
+        
+        isCameraShake = true;
         player = GameObject.FindGameObjectWithTag("Player");
         damage = player.GetComponent<PlayerStats>().baseDamage;
-        hitboxRangeX = player.GetComponent<PlayerStats>().projectileRange;
-        hitboxRangeZ = 1.8f;
+        hitboxRangeX = 1f;
+        hitboxRangeZ = 1f;
         weaponDistance = player.GetComponent<PlayerStats>().projectileSpeed;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        foreach (var VARIABLE in basicMultiChannelPerlin)
+        {
+            VARIABLE.FrequencyGain = 1f;
+        }
         fireValue = Random.value;
         iceValue = Random.value;
         if (iceValue < player.GetComponent<PlayerStats>().iceChance)
@@ -76,9 +85,14 @@ public class hitBox : MonoBehaviour
     {
         if (other.TryGetComponent(out AbstractEnemy enemy))
         {
+            if (isCameraShake)
+            {
+                StartCoroutine("ShakeCamera");
+            }
+
             if (enemy.enemyType == AbstractEnemy.EnemyType.Tank)
             {
-                Destroy(gameObject);
+                Destroy(gameObject,0.1f);
             }
 
             if (!audioSource.isPlaying)
@@ -106,5 +120,29 @@ public class hitBox : MonoBehaviour
         }
     }
 
-   
+    private IEnumerator ShakeCamera()
+    {
+        foreach (var VARIABLE in basicMultiChannelPerlin)
+        {
+            VARIABLE.FrequencyGain = 30f;
+            VARIABLE.AmplitudeGain = 1.2f;
+                ;
+        }
+        yield return new WaitForSecondsRealtime(0.07f);
+        foreach (var VARIABLE in basicMultiChannelPerlin)
+        {
+            VARIABLE.AmplitudeGain = 1f;
+            VARIABLE.FrequencyGain = 1f;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var VARIABLE in basicMultiChannelPerlin)
+        {
+            VARIABLE.AmplitudeGain = 1f;
+            VARIABLE.FrequencyGain = 1f;
+        }
+        StopAllCoroutines();
+    }
 }

@@ -32,44 +32,53 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public Text comboRankText, comboKillCountText, maxComboKillCountText;
     public int comboKillCount, comboKillCountMax;
     public int currentCoins, totalCoins;
-    public float invisibilityFramesRoll, invisibilityFramesAfterDamage;
+    public float invisibilityFramesRoll, invisibilityFramesAfterDamage, moveSpeed;
     public bool canTakeDamage;
     public float iceChance, fireChance;
     public GameObject deathScreen;
     public Text deathScreenText;
-    public float magicCooldown, magicConsumption;
+    public float magicCooldown, magicConsumption, magicStrength;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
-        maxMana = 100;
-        mana = maxMana;
-        manaRegenRate = 5f;
-        iceChance = 0.01f;
-        fireChance = 0.01f;
-        enemyStunTime = 0.085f;
-        canTakeDamage = true;
         animator = GetComponent<Animator>();
-        comboRank = 1;
-        comboMeterMaxAmountMax = 100;
-        fireDamage = 2.5f;
-        iceDamage = 1f;
-        earthDamage = 1.5f;
-        maxHp = 100;
-        hp = maxHp;
-        hpRegenRate = 0.01f;
-        baseDamage = 10f;
-        projectileRange = 1f;
-        projectileSpeed = 4f;
-        maxCritChance = 0.01f;
-        critDamageMultiplier = 1.05f;
-        invisibilityFramesRoll = 0.75f;
-        invisibilityFramesAfterDamage = 0.15f;
-        magicCooldown = 5f;
-        magicConsumption = 15f;
+        SetPlayerStats();
+
 
     }
-    
+
+    public void SetPlayerStats()
+    {
+        maxMana = 50 + PlayerPrefs.GetFloat("maxMp");
+        mana = maxMana;
+        magicStrength = 1 +  PlayerPrefs.GetFloat("magicPower"); ;
+        manaRegenRate = 1f + PlayerPrefs.GetFloat("mpRegRate");
+        iceChance = 0.01f +  PlayerPrefs.GetFloat("iceChance");
+        fireChance = 0.01f  +  PlayerPrefs.GetFloat("fireChance");
+        enemyStunTime = 0.02f;
+        canTakeDamage = true;
+        moveSpeed = PlayerPrefs.GetFloat("moveSpeed");
+        animator.speed = 0.45f+ moveSpeed;
+        comboRank = 1;
+        comboMeterMaxAmountMax = 100;
+        fireDamage = 2.5f * magicStrength;
+        iceDamage = 1f *  magicStrength;
+        earthDamage = 1.5f * magicStrength;
+        maxHp = 150 + PlayerPrefs.GetFloat("maxHp");
+        hp = maxHp;
+        hpRegenRate = 0.01f + PlayerPrefs.GetFloat("hpRegRate");
+        baseDamage = 9f + PlayerPrefs.GetFloat("physicalAttack");
+        projectileRange = 1.5f + PlayerPrefs.GetFloat("weaponRange");
+        projectileSpeed = 3f  + PlayerPrefs.GetFloat("weaponReach");
+        maxCritChance = 0.01f +  PlayerPrefs.GetFloat("criticalChance");
+        critDamageMultiplier = 1.1f +  PlayerPrefs.GetFloat("criticalDamage");
+        invisibilityFramesRoll = 0.75f;
+        invisibilityFramesAfterDamage = 0.25f;
+        magicCooldown = 5f;
+        magicConsumption = 25f;
+        
+    }
+
     // Update is called once per frame
     void Update()
     {

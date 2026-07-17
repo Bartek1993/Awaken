@@ -12,7 +12,7 @@ public abstract class AbstractEnemy : MonoBehaviour,  ICommonMethods
 {
     public enum EnemyType
     {
-        Normal, Tank, Magic, Elemental
+        Normal, Tank, Magic, Elemental, Explosive 
     }
 
     public GameObject onEntryObject;

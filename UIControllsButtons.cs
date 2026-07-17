@@ -87,10 +87,8 @@ public class UIControllsButtons : MonoBehaviour
         GameObject go = Instantiate(hitBoxMagic,Player.transform.position,Player.transform.rotation);
         Destroy(go,2f);
         magicIdentity = magicId;
-        if (Player.GetComponent<PlayerStats>().mana > 25)
-        {
-            StartCoroutine(Cooldown(magicIdentity));
-        }
+        StartCoroutine(Cooldown(magicIdentity));
+        
 
         
         
@@ -112,8 +110,7 @@ public class UIControllsButtons : MonoBehaviour
 
     public IEnumerator Cooldown(int id)
     {
-      
-        Player.gameObject.GetComponent<PlayerStats>().mana -= 25;
+        buttons[id].GetComponentInChildren<Image>().fillAmount = cooldowntime;
         buttons[id].gameObject.SetActive(false);
         buttons[id].enabled = false;
         yield return new WaitForSeconds(cooldowntime);

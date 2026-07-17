@@ -48,6 +48,7 @@ public class SimpleEnemy : AbstractEnemy
 
     public override void TakeDamage(float damage)
     {
+        float randval = Random.Range(0f, 1f);
         CombatText.Spawn(TextStyle.DamageEnemy,"-" +damage.ToString("F1"), transform.position, null);
         hp -= damage;
         if (!audioSource.isPlaying)
@@ -67,7 +68,7 @@ public class SimpleEnemy : AbstractEnemy
             capsule.enabled = false;
             animator.speed = 0;
            // audioSource.PlayOneShot(audioClip[Random.Range(0, 1)]);
-            Destroy(gameObject,0.1f);
+            Destroy(gameObject,0.01f);
            
         }
     }
@@ -84,7 +85,7 @@ public class SimpleEnemy : AbstractEnemy
     public override IEnumerator isOnFrozen()
     {
         CombatText.Spawn(TextStyle.DamagePlayer,"FROZEN", transform.position,null);
-        animator.speed = 0;
+        animator.speed = 0.25f;
         yield return new WaitForSeconds(Random.Range(1f, 1.5f));
         animator.speed = animatorStartSpeed;
         yield return null;
@@ -107,9 +108,20 @@ public class SimpleEnemy : AbstractEnemy
         player.GetComponent<PlayerStats>().totalEnemiesKilled += 1;
         stageManager.enemyCount--;
         Vector3 coinPos = new Vector3(0, 1f, 0);
-        GameObject go =Instantiate(rewards[Random.Range(0, rewards.Length)], transform.position+ coinPos, Quaternion.identity);
-        go.transform.parent = null;
-       
+        
+        if (enemyType == EnemyType.Explosive)
+        {
+            GameObject go2 = Instantiate(rewards[1], transform.position, transform.rotation);
+            go2.transform.parent = null;
+            Destroy(go2,.7f);
+        }
+        else
+        {
+            GameObject go =Instantiate(rewards[0], transform.position+ coinPos, Quaternion.identity);
+            go.transform.parent = null;
+
+        }
+
     }
 
     

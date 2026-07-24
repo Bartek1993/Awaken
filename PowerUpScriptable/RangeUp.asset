@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fffee95622f2de4bb6812977097314b, type: 3}
-  m_Name: PowerUpScriptable 19
+  m_Name: RangeUp
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
   card: 1
   isPernament: 0

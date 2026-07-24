@@ -27,5 +27,8 @@ MonoBehaviour:
   projectileSpeed: 0
   projectileRange: 0
   invisibilityFramesRoll: 0
-  invisibilityFramesAfterDamage: 0.1
+  invisibilityFramesAfterDamage: 0.5
   playerSpeed: 0
+  enemyStopTime: 0
+  iceChance: 0
+  fireChance: 0

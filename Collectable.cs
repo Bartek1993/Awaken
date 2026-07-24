@@ -10,38 +10,55 @@ public interface ICollectable
 
 public class Collectable : MonoBehaviour, ICollectable
 {
+    public int collectableID;
     float distance;
     public GameObject player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         player =  GameObject.FindGameObjectWithTag("Player");
-        Destroy(gameObject, 20f);
+        Destroy(gameObject, 15f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.localScale -= transform.localScale * 0.1f * Time.deltaTime;
-        if (transform.localScale.x <= 0)
-        {
-            Destroy(gameObject);
-        }
 
         transform.Rotate(new Vector3(0, 360, 0) * Time.deltaTime);
         distance = Vector3.Distance(player.transform.position, transform.position);
-        if (distance <= 2f)
+        switch (collectableID)
         {
-            transform.position = Vector3.Lerp(transform.position, player.transform.position + Vector3.up, 10f * Time.deltaTime);
+            case 1:
+                if (distance <= 5f)
+                {
+                    transform.position = Vector3.Lerp(transform.position, player.transform.position + Vector3.up, 12f * Time.deltaTime);
+                }
+
+                break;
+            case 2:
+                if (distance <= 3f)
+                {
+                    transform.position = Vector3.Lerp(transform.position, player.transform.position + Vector3.up, 10f * Time.deltaTime);
+                }
+                break;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (!other.TryGetComponent<PlayerStats>(out var playerStats)) return;
-        playerStats.CollectReward();
+        switch (collectableID)
+        {
+            case 1:
+                playerStats.CollectReward();
+                break;
+            case 2:
+                playerStats.exp += 10;
+                break;
+        }
+        
         Debug.Log("REWARDD");
-        Destroy(gameObject,0.1f);
+        Destroy(gameObject,0.01f);
         
     }
     

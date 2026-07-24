@@ -15,7 +15,7 @@ MonoBehaviour:
   card: 3
   isPernament: 0
   cardLevel: 2
-  PowerUpName: SPECIAL
+  PowerUpName: STUN
   PowerUpDescription: ENEMY STUNNED FOR LONGER AFTER TAKING DAMAGE
   baseAttack: 0
   critDamageMultiplier: 0
@@ -30,3 +30,5 @@ MonoBehaviour:
   invisibilityFramesAfterDamage: 0
   playerSpeed: 0
   enemyStopTime: 0.05
+  iceChance: 0
+  fireChance: 0

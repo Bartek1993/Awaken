@@ -43,11 +43,7 @@ public class EnemySpawner : Spawner
                     switch (go.GetComponent<AbstractEnemy>().enemyType)
                     {
                         case AbstractEnemy.EnemyType.Tank:
-                            stageManager.waveWeight += 1f;
-                           
-                            break;
-                        default:
-                            stageManager.waveWeight += 0.15f;
+                            //stageManager.waveWeight += 0f;
                             break;
                     }
 

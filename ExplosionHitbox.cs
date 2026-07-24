@@ -20,7 +20,7 @@ public class ExplosionHitbox : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<PlayerStats>().TakeDamage(other.GetComponent<PlayerStats>().maxHp * 0.01f);
+            other.GetComponent<PlayerStats>().TakeDamage(other.GetComponent<PlayerStats>().maxHp * 0.05f);
         }
     }
 }

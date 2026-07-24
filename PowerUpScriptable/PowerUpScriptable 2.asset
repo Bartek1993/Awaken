@@ -16,11 +16,11 @@ MonoBehaviour:
   isPernament: 0
   cardLevel: 1
   PowerUpName: MAX HP
-  PowerUpDescription: INCREASE MAX HP
+  PowerUpDescription: INCREASE MAX HP BY 25 HP
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
-  baseHp: 25
+  baseHp: 0
   maxHp: 25
   hpRegenRate: 0
   baseDefense: 0
@@ -29,3 +29,6 @@ MonoBehaviour:
   invisibilityFramesRoll: 0
   invisibilityFramesAfterDamage: 0
   playerSpeed: 0
+  enemyStopTime: 0
+  iceChance: 0
+  fireChance: 0

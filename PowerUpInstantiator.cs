@@ -17,27 +17,30 @@ public class PowerUpInstantiator : MonoBehaviour
     public bool closePowerUp;
     public StageManager stageManager;
     public PlayerStats playerStats;
+    public StageProperties stageProperties;
     private void OnEnable()
     {
         playerStats = FindFirstObjectByType<PlayerStats>();
         stageManager = FindFirstObjectByType<StageManager>();
+        stageProperties = FindFirstObjectByType<StageProperties>();
         closePowerUp = false;
         for (var i = 1; i < powerUps.Length; i++)
         {
             possibleID.Add(i);
         }
 
-        for (int a = 0; a < 3; a++)
+        for (int a = 0; a < 2; a++)
         {
             int randomIDIndex = UnityEngine.Random.Range(0, possibleID.Count); 
             int currentId = possibleID[randomIDIndex];
             possibleID.RemoveAt(randomIDIndex);
             go = Instantiate(buttonPrefab, powerUpButtonWindow);
             go.GetComponent<SkillButton>().buttonID = currentId;
-            string powerUpDetails = powerUps[currentId].PowerUpName +"\n \n"+"LV"+ powerUps[currentId].cardLevel+"\n \n"+ powerUps[currentId].PowerUpDescription;
+            string powerUpDetails = powerUps[currentId].PowerUpName +  "\n \n"+ powerUps[currentId].PowerUpDescription;
             go.GetComponent<SkillButton>().skillNameText.text = powerUpDetails;
             go.GetComponent<Button>().onClick.AddListener(() => powerUps[currentId].OnClickButton(playerStats));
-            go.GetComponent<Button>().onClick.AddListener(() => stageManager.isWaveFinished = false);
+            go.GetComponent<Button>().onClick.AddListener(() => stageProperties.isPaused = false);
+            go.GetComponent<Button>().onClick.AddListener(() => stageProperties.isLevelingUp = false);
             buttons.Add(go);
             
         }

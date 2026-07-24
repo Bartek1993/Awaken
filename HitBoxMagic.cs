@@ -19,11 +19,11 @@ public class HitBoxMagic : MonoBehaviour
         switch (getMagicID)
         {
             case 0:
-                hitboxSize = 2;
+                hitboxSize = 5;
                 iceAge.SetActive(true);
                 break;
             case 1:
-                hitboxSize = 2;
+                hitboxSize = 5;
                 Collider [] colliders = Physics.OverlapSphere(transform.position, 5f, vegetationMask);
                 foreach (Collider col in colliders)
                 {
@@ -36,6 +36,7 @@ public class HitBoxMagic : MonoBehaviour
                 fireStorm.SetActive(true);
                 break;
             case 2:
+                hitboxSize = 2;
                 earthBound.SetActive(true);
                 break;
         }
@@ -60,13 +61,6 @@ public class HitBoxMagic : MonoBehaviour
                 case 1:
                    
                     enemy.TakeDamage(playerStats.fireDamage);
-                    Collider[] colliders = Physics.OverlapSphere(transform.position, hitboxSize, enemyMask);
-                    foreach (Collider col in colliders)
-                    {
-                        GameObject fire = Instantiate(fireObject, col.transform.position, col.transform.rotation);
-                        Destroy(fire, 2f);
-                    }
-
                     break;
                 case 2:
                     enemy.TakeDamage(playerStats.earthDamage);
@@ -109,6 +103,14 @@ public class HitBoxMagic : MonoBehaviour
                         enemy.TakeDamage(playerStats.earthDamage);
                     }
                     break;
+            }
+        }
+
+        if (other.TryGetComponent(out hitBoxEnemy hitBox))
+        {
+            if (hitBox.isFire || hitBox.isIce)
+            {
+                Destroy(hitBox);
             }
         }
     }

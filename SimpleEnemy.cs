@@ -22,7 +22,7 @@ public class SimpleEnemy : AbstractEnemy
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
         stageManager = FindAnyObjectByType<StageManager>();
-        hp = Random.Range(minHp* stageManager.difficulty, maxHp* stageManager.difficulty) ;
+        hp = Random.Range(minHp + stageManager.waveCount, maxHp + stageManager.waveCount) + stageManager.difficulty;
         stageManager.enemyCount++;
         if (stageManager.waveCount % 1 == 0)
         {
@@ -35,7 +35,8 @@ public class SimpleEnemy : AbstractEnemy
         }
 
         animator.speed = animatorStartSpeed;
-        damage *= stageManager.difficulty;
+        
+        
 
     }
 
@@ -43,6 +44,7 @@ public class SimpleEnemy : AbstractEnemy
     void Update()
     {
         base.Update();
+        damage = Random.Range(minDamage, maxDamage) * stageManager.difficulty;
 
     }
 
@@ -59,7 +61,7 @@ public class SimpleEnemy : AbstractEnemy
         GameObject go = Instantiate(bloodPrefabs[Random.Range(0, bloodPrefabs.Length)], transform.position+ Vector3.up, Quaternion.identity);
         if (enemyType != EnemyType.Tank)
         {
-            StartCoroutine("SlowDown");
+            StartCoroutine(nameof(SlowDown));
         }
         
         Destroy(go, 1f);
@@ -85,15 +87,16 @@ public class SimpleEnemy : AbstractEnemy
     public override IEnumerator isOnFrozen()
     {
         CombatText.Spawn(TextStyle.DamagePlayer,"FROZEN", transform.position,null);
-        animator.speed = 0.25f;
-        yield return new WaitForSeconds(Random.Range(1f, 1.5f));
+        animator.speed = 0.15f;
+        yield return new WaitForSeconds(Random.Range(2f, 2.5f));
         animator.speed = animatorStartSpeed;
+        StopAllCoroutines();
         yield return null;
     }
 
     private IEnumerator SlowDown()
     {
-        animator.speed = 0;
+        animator.speed = 0f;
         yield return new WaitForSeconds(player.GetComponent<PlayerStats>().enemyStunTime);
         animator.speed = animatorStartSpeed;
     }
@@ -111,14 +114,18 @@ public class SimpleEnemy : AbstractEnemy
         
         if (enemyType == EnemyType.Explosive)
         {
-            GameObject go2 = Instantiate(rewards[1], transform.position, transform.rotation);
+            GameObject exp =Instantiate(rewards[1], transform.position+ coinPos, Quaternion.identity);
+            GameObject go2 = Instantiate(rewards[2], transform.position, transform.rotation);
             go2.transform.parent = null;
-            Destroy(go2,.7f);
+            exp.transform.parent = null;
+            Destroy(go2,.1f);
         }
         else
         {
-            GameObject go =Instantiate(rewards[0], transform.position+ coinPos, Quaternion.identity);
-            go.transform.parent = null;
+            GameObject exp =Instantiate(rewards[1], transform.position+ coinPos, Quaternion.identity);
+            GameObject gold =Instantiate(rewards[0], transform.position+ coinPos, Quaternion.identity);
+            exp.transform.parent = null;
+            gold.transform.parent = null;
 
         }
 

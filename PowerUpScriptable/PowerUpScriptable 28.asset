@@ -17,7 +17,7 @@ MonoBehaviour:
   cardLevel: 5
   PowerUpName: BASE ATTACK
   PowerUpDescription: INCREASE BASE ATTACK
-  baseAttack: 0.05
+  baseAttack: 0.02
   critDamageMultiplier: 0
   critChance: 0
   baseHp: 0
@@ -29,3 +29,6 @@ MonoBehaviour:
   invisibilityFramesRoll: 0
   invisibilityFramesAfterDamage: 0
   playerSpeed: 0
+  enemyStopTime: 0
+  iceChance: 0
+  fireChance: 0

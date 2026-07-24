@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class SplashScreen : MonoBehaviour
 {
+    public GameObject warningMessage;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,7 +16,10 @@ public class SplashScreen : MonoBehaviour
 
     private IEnumerator SplashScreenCoroutine()
     {
-        yield return new WaitForSeconds(5f);
+        
+        yield return new WaitForSeconds(2f);
+        warningMessage.SetActive(true);
+        yield return new WaitForSeconds(4f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 

@@ -15,6 +15,40 @@ public class CustomizeCharacter : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (!PlayerPrefs.HasKey("hairID"))
+        {
+            PlayerPrefs.SetInt("hairID", 4);
+        }
+        else
+        {
+            hairID = PlayerPrefs.GetInt("hairID");
+        }
+
+        if (!PlayerPrefs.HasKey("beardID"))
+        {
+            PlayerPrefs.SetInt("beardID", 4);
+        }
+        else
+        {
+            beardID = PlayerPrefs.GetInt("beardID");
+        }
+
+        if (!PlayerPrefs.HasKey("skinColorR"))
+        {
+            PlayerPrefs.SetFloat("skinColorR", 0.55f);
+        }
+
+        if (!PlayerPrefs.HasKey("skinColorG"))
+        {
+            PlayerPrefs.SetFloat("skinColorG", 0.35f);
+        }
+
+        if (!PlayerPrefs.HasKey("skinColorB"))
+        {
+            PlayerPrefs.SetFloat("skinColorB", 0.35f);
+        }
+
+
         hairID = PlayerPrefs.GetInt("hairID");
         beardID = PlayerPrefs.GetInt("beardID");
         hairColorR.value = PlayerPrefs.GetFloat("hairColorR");

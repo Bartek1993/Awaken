@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class StageManager : MonoBehaviour
 {
@@ -30,26 +32,47 @@ public class StageManager : MonoBehaviour
     public Vector3 stageOffset;
     public float waveWeight;
     public int enemyVariationMax;
+    public int randStage = Random.Range(0, 4);
+    public GameObject [] stages;
+    public GameObject[] bosses;
+    public StageProperties stageProperties;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    private void Awake()
+    {
+    }
+
     void Start()
     {
+        stageProperties = FindFirstObjectByType<StageProperties>();
         waveStartnumber = PlayerPrefs.GetInt("startWave");
-        difficulty = PlayerPrefs.GetInt("wavedifficulty");
-        enemyVariationMax = 2 * difficulty;
+        difficulty = PlayerPrefs.GetInt("difficulty");
+        enemyVariationMax = 2;
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
         Screen.SetResolution(1920, 1080, true);
         player = GameObject.FindGameObjectWithTag("Player");
-        spawnTimer = 0.65f;
+        spawnTimer = 1.25f;
         spawnRate = 1;
         cooldownTimer = 1f;
         canSpawn = true;
         waveCount = waveStartnumber;
-        maxEnemySpawn = (40 + difficulty) * waveStartnumber;
+        maxEnemySpawn = 10 + difficulty;
         enemiesToKill = maxEnemySpawn;
         killCount = 0;
         isWaveFinished = false;
-        
+        if (difficulty > 10)
+        {
+            stages[0].SetActive(false);
+            stages[1].SetActive(true);
+        }
+
+        if (difficulty <= 10)
+        {
+            stages[0].SetActive(true);
+            stages[1].SetActive(false);
+        }
+
     }
 
     // Update is called once per frame
@@ -59,7 +82,6 @@ public class StageManager : MonoBehaviour
         {
             stageMusic.PlayOneShot(songs[Random.Range(0, songs.Length)]);
         }
-        powerUpPanel.SetActive(isWaveFinished);
         stageGround.transform.position = player.transform.position +  stageOffset;
         waveText.text = waveCount.ToString();
         if (spawnTimer > 2.5f)
@@ -71,34 +93,41 @@ public class StageManager : MonoBehaviour
         {
             if (!isWaveFinished)
             {
-                isWaveFinished = true;
-                canSpawn = false;
-                cooldownTimer = 2f;
+                
+                //canSpawn = false;
+                cooldownTimer = 0f;
                 waveCount += 1;
                 killCount = 0;
                 canSpawn = true;
                 spawnCount = 0;
                 waveWeight = 0;
-                spawnTimer -= 0.05f;
                 if (waveCount % 1 == 0)
                 {
                     maxEnemySpawn += 10;
-                    int skillpoint = PlayerPrefs.GetInt("currentSkillPoints");
-                    PlayerPrefs.SetInt("currentSkillPoints", skillpoint + 1);
+                    
                     
                 }
-                
-                
-                if (waveCount % 5 == 0)
+                if (waveCount % 2 == 0)
                 {
                     enemyVariationMax += 1;
-                    
-                    
+                    int skillpoint = PlayerPrefs.GetInt("currentSkillPoints");
+                    PlayerPrefs.SetInt("currentSkillPoints", skillpoint + 1);
+                }
+                if (waveCount % 4 == 0)
+                {
+                    spawnTimer -= 0.1f;
+                }
+                if (waveCount % 2 == 0)
+                {
+                    GameObject boss = Instantiate(bosses[Random.Range(0, bosses.Length)], player.transform.position + new Vector3(0,0,10f), Quaternion.identity);
                     
                 }
-
                 
-
+                if (waveCount % 10 == 0)
+                {
+                    maxEnemySpawn += difficulty;
+                }
+                
                 enemiesToKill = maxEnemySpawn;
             }
         }
@@ -108,27 +137,19 @@ public class StageManager : MonoBehaviour
             canSpawn = false;
         }
 
-        if (waveWeight >= 200)
+        if (waveWeight >= 300)
         {
             canSpawn = false;
             waveWeight = 300;
             enemiesToKill = spawnCount;
         }
 
-        if (maxEnemySpawn >= 200)
+        if (maxEnemySpawn >= 300)
         {
-            maxEnemySpawn = 200;
+            maxEnemySpawn = 300;
             enemiesToKill = maxEnemySpawn;
         }
-
-        if (isWaveFinished)
-        {
-            Time.timeScale = 0;
-        }
-        else
-        {
-            Time.timeScale = 1;
-        }
+        
 
         if (spawnTimer <= 0.25f)
         {
@@ -137,9 +158,9 @@ public class StageManager : MonoBehaviour
 
 
         StageTimer();
-        if (enemyVariationMax > 5)
+        if (enemyVariationMax > 8)
         {
-            enemyVariationMax = 5;
+            enemyVariationMax = 8;
         }
     }
 

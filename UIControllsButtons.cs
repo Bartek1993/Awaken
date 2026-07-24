@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class UIControllsButtons : MonoBehaviour
     public GameObject hitBoxMagic;
     public float cooldowntime;
     public Button[] buttons;
+    public Button rollButton;
     public int magicIdentity;
     public GameObject closeCam, farCam;
     public bool camSwitched;
@@ -25,30 +27,12 @@ public class UIControllsButtons : MonoBehaviour
         canRoll = true;
         Player = GameObject.FindGameObjectWithTag("Player");
         animator = Player.GetComponent<Animator>();
-        cooldowntime = 2.5f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Player.GetComponent<PlayerStats>().mana < Player.GetComponent<PlayerStats>().magicConsumption)
-        {
-            foreach (Button button in buttons)
-            {
-                if (button.IsActive())
-                {
-                    button.gameObject.SetActive(false);
-                }
-            }
-        }
-        else
-        {
-            foreach (Button button in buttons)
-            {
-                    button.gameObject.SetActive(true);
-            }
-        }
-
+        
         if (isAttacking)
         {
             attackID += 1;
@@ -76,6 +60,7 @@ public class UIControllsButtons : MonoBehaviour
     {
         if (!isAttacking)
         {
+            animator.SetTrigger("roll");
             StartCoroutine("Roll");
         }
 
@@ -97,25 +82,38 @@ public class UIControllsButtons : MonoBehaviour
 
     public IEnumerator Roll()
     {
-        Player.GetComponent<PlayerStats>().canTakeDamage = false;
-        animator.SetTrigger("roll");
-        canRoll = false;
-        yield return new WaitForSeconds(0.05f);
-        animator.ResetTrigger("roll");
+        yield return new WaitForSeconds(0.1f);
+        rollButton.interactable = false;
         yield return new WaitForSeconds(Player.GetComponent<PlayerStats>().invisibilityFramesRoll);
         Player.GetComponent<PlayerStats>().canTakeDamage = true;
+        float timer = 0;
+        while (timer < Player.GetComponent<PlayerStats>().staminaCoolDown)
+        {
+            animator.ResetTrigger("roll");
+            rollButton.GetComponent<Image>().fillAmount =  Mathf.Clamp01(timer / Player.GetComponent<PlayerStats>().staminaCoolDown);
+            timer += Time.deltaTime;
+            canRoll = false;
+            yield return null;
+        }
         canRoll = true;
+        rollButton.interactable = true;
     }
 
 
     public IEnumerator Cooldown(int id)
     {
-        buttons[id].GetComponentInChildren<Image>().fillAmount = cooldowntime;
-        buttons[id].gameObject.SetActive(false);
-        buttons[id].enabled = false;
-        yield return new WaitForSeconds(cooldowntime);
+        cooldowntime = Player.GetComponent<PlayerStats>().magicCooldown;
+        float timer = 0;
+        while (timer < cooldowntime)
+        {
+            timer += Time.deltaTime;
+            buttons[id].GetComponent<Image>().fillAmount = Mathf.Clamp(timer / cooldowntime, 0f, 1f);
+            buttons[id].enabled = false;
+            yield return null;
+        }
         buttons[id].enabled = true;
         buttons[id].gameObject.SetActive(true);
+
     }
 
     public void switchCam()

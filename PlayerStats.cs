@@ -17,6 +17,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public float hp, maxHp, hpRegenRate;
     public float baseDamage;
     public float mana, maxMana, manaRegenRate;
+    public float exp, maxExp;
     public float defence;
     public Image hpBar;
     public float projectileRange, projectileSpeed;
@@ -26,7 +27,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     private float randomizeValue;
     public GameObject fireshield;
     public bool fireShieldOn;
-    public Image comboMeter, manaMeter;
+    public Image comboMeter, expMeter;
     public float comboMeterFillAmount, comboMeterMaxAmountMax;
     public int comboRank;
     public Text comboRankText, comboKillCountText, maxComboKillCountText;
@@ -37,10 +38,13 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public float iceChance, fireChance;
     public GameObject deathScreen;
     public Text deathScreenText;
-    public float magicCooldown, magicConsumption, magicStrength;
+    public float magicCooldown, magicStrength;
+    public float staminaCoolDown;
+    public StageProperties stageProperties;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        stageProperties = FindFirstObjectByType<StageProperties>();
         animator = GetComponent<Animator>();
         SetPlayerStats();
 
@@ -51,32 +55,38 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     {
         maxMana = 50 + PlayerPrefs.GetFloat("maxMp");
         mana = maxMana;
-        magicStrength = 1 +  PlayerPrefs.GetFloat("magicPower"); ;
+        magicStrength = 1 +  PlayerPrefs.GetFloat("magicPower");
         manaRegenRate = 1f + PlayerPrefs.GetFloat("mpRegRate");
+        float basmagiccooldown = 5;
+        magicCooldown = basmagiccooldown - PlayerPrefs.GetFloat("magicCooldown");
         iceChance = 0.01f +  PlayerPrefs.GetFloat("iceChance");
         fireChance = 0.01f  +  PlayerPrefs.GetFloat("fireChance");
-        enemyStunTime = 0.02f;
+        enemyStunTime = 0.12f;
         canTakeDamage = true;
         moveSpeed = PlayerPrefs.GetFloat("moveSpeed");
         animator.speed = 0.45f+ moveSpeed;
         comboRank = 1;
         comboMeterMaxAmountMax = 100;
         fireDamage = 2.5f * magicStrength;
-        iceDamage = 1f *  magicStrength;
+        iceDamage = 0.55f *  magicStrength;
         earthDamage = 1.5f * magicStrength;
         maxHp = 150 + PlayerPrefs.GetFloat("maxHp");
         hp = maxHp;
-        hpRegenRate = 0.01f + PlayerPrefs.GetFloat("hpRegRate");
+        hpRegenRate = 0.0f + PlayerPrefs.GetFloat("hpRegRate");
         baseDamage = 9f + PlayerPrefs.GetFloat("physicalAttack");
-        projectileRange = 1.5f + PlayerPrefs.GetFloat("weaponRange");
-        projectileSpeed = 3f  + PlayerPrefs.GetFloat("weaponReach");
+        projectileRange = 2.5f + PlayerPrefs.GetFloat("weaponRange");
+        projectileSpeed = 5f  + PlayerPrefs.GetFloat("weaponReach");
         maxCritChance = 0.01f +  PlayerPrefs.GetFloat("criticalChance");
         critDamageMultiplier = 1.1f +  PlayerPrefs.GetFloat("criticalDamage");
         invisibilityFramesRoll = 0.75f;
         invisibilityFramesAfterDamage = 0.25f;
-        magicCooldown = 5f;
-        magicConsumption = 25f;
-        
+        float basestamina = 5;
+        staminaCoolDown = basestamina -  PlayerPrefs.GetFloat("staminaCoolDown");
+        exp = 0;
+        maxExp = 50;
+
+
+
     }
 
     // Update is called once per frame
@@ -96,6 +106,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     {
         if (hp <= 0)
         {
+            stageProperties.isPaused =  true;
             deathScreen.SetActive(true);
             UIControllsButtons uiControllsButtons = FindFirstObjectByType<UIControllsButtons>();
             uiControllsButtons.animator.speed = 0;
@@ -120,6 +131,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
        
        yield return new WaitForSecondsRealtime(2.5f);
        PlayerPrefs.SetInt("score",score);
+       stageProperties.isPaused =  false;
        SceneManager.LoadScene(1, LoadSceneMode.Single);
     }
 
@@ -133,14 +145,16 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         
         hp += hpRegenRate * Time.deltaTime;
         hpBar.fillAmount = hp / maxHp;
-
-        if (mana > maxMana)
-        {
-            mana = maxMana;
-        }
-        mana += manaRegenRate * Time.deltaTime;
-        manaMeter.fillAmount = mana / maxMana;
         
+        expMeter.fillAmount = exp / maxExp;
+        if (exp > maxExp)
+        {
+            stageProperties.isLevelingUp = true;
+            stageProperties.isPaused = true;
+            exp = 0;
+            maxExp += 10;
+        }
+
     }
 
     private void ShieldMethod()

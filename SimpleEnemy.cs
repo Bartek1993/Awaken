@@ -22,21 +22,19 @@ public class SimpleEnemy : AbstractEnemy
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
         stageManager = FindAnyObjectByType<StageManager>();
-        hp = Random.Range(minHp + stageManager.waveCount, maxHp + stageManager.waveCount) + stageManager.difficulty;
+        hp = Random.Range(minHp, maxHp) + stageManager.difficulty;
+        hp += stageManager.hpAddition;
         stageManager.enemyCount++;
-        if (stageManager.waveCount % 1 == 0)
-        {
-            animatorStartSpeed+= 0.05f;
-            damage += 0.1f;
-        }
+       
         if (animator.speed > 2.5f)
         {
             animator.speed = 2.5f;
         }
 
-        animator.speed = animatorStartSpeed;
-        
-        
+        animator.speed = animatorStartSpeed + stageManager.speedIncrease;
+        damage = Random.Range(minDamage + stageManager.damageIncrease, maxDamage + stageManager.damageIncrease) * stageManager.difficulty;
+
+
 
     }
 
@@ -44,7 +42,7 @@ public class SimpleEnemy : AbstractEnemy
     void Update()
     {
         base.Update();
-        damage = Random.Range(minDamage, maxDamage) * stageManager.difficulty;
+        
 
     }
 
@@ -57,11 +55,12 @@ public class SimpleEnemy : AbstractEnemy
         {
             audioSource.PlayOneShot(audioClip[2]);
         }
-
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.AddForce(-transform.forward * player.GetComponent<PlayerStats>().knockBasckStrength, ForceMode.Impulse);
         GameObject go = Instantiate(bloodPrefabs[Random.Range(0, bloodPrefabs.Length)], transform.position+ Vector3.up, Quaternion.identity);
         if (enemyType != EnemyType.Tank)
         {
-            StartCoroutine(nameof(SlowDown));
+            StartCoroutine(SlowDown(rb));
         }
         
         Destroy(go, 1f);
@@ -73,12 +72,13 @@ public class SimpleEnemy : AbstractEnemy
             Destroy(gameObject,0.01f);
            
         }
+        
     }
 
     public override IEnumerator isOnFire()
     {
         CombatText.Spawn(TextStyle.DamagePlayer,"ON FIRE", transform.position,null);
-        TakeDamage(0.05f * Time.deltaTime);
+        TakeDamage(player.GetComponent<PlayerStats>().fireDamage * Time.deltaTime);
         yield return new WaitForSeconds(0.5f);
         yield return null;
 
@@ -87,18 +87,19 @@ public class SimpleEnemy : AbstractEnemy
     public override IEnumerator isOnFrozen()
     {
         CombatText.Spawn(TextStyle.DamagePlayer,"FROZEN", transform.position,null);
-        animator.speed = 0.15f;
-        yield return new WaitForSeconds(Random.Range(2f, 2.5f));
+        animator.speed = 0.25f;
+        yield return new WaitForSeconds(player.GetComponent<PlayerStats>().frozenTimer);
         animator.speed = animatorStartSpeed;
-        StopAllCoroutines();
         yield return null;
     }
 
-    private IEnumerator SlowDown()
+    private IEnumerator SlowDown(Rigidbody rb)
     {
         animator.speed = 0f;
+        rb.AddForce(-transform.forward * player.GetComponent<PlayerStats>().knockBasckStrength, ForceMode.Impulse);
         yield return new WaitForSeconds(player.GetComponent<PlayerStats>().enemyStunTime);
         animator.speed = animatorStartSpeed;
+        
     }
 
     private void OnDestroy()
@@ -118,7 +119,7 @@ public class SimpleEnemy : AbstractEnemy
             GameObject go2 = Instantiate(rewards[2], transform.position, transform.rotation);
             go2.transform.parent = null;
             exp.transform.parent = null;
-            Destroy(go2,.1f);
+            Destroy(go2,.5f);
         }
         else
         {
@@ -127,6 +128,13 @@ public class SimpleEnemy : AbstractEnemy
             exp.transform.parent = null;
             gold.transform.parent = null;
 
+        }
+        
+        float lifestealChance = player.GetComponent<PlayerStats>().lifeStealChance;
+        float stealChance = Random.value;
+        if (stealChance < lifestealChance)
+        {
+            player.GetComponent<PlayerStats>().hp += player.GetComponent<PlayerStats>().lifestealamount;
         }
 
     }

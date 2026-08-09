@@ -16,23 +16,22 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public float extraAdrenalineGain;
     public float hp, maxHp, hpRegenRate;
     public float baseDamage;
-    public float mana, maxMana, manaRegenRate;
+    public float mana, maxMana, manaRegenRate, AOEDistance;
     public float exp, maxExp;
     public float defence;
     public Image hpBar;
     public float projectileRange, projectileSpeed;
-    public float fireDamage, iceDamage, earthDamage;
+    public float fireDamage, iceDamage, thunderDamage, earthDamage;
     public float maxCritChance, critDamageMultiplier;
     public float enemyStunTime;
     private float randomizeValue;
-    public GameObject fireshield;
-    public bool fireShieldOn;
     public Image comboMeter, expMeter;
     public float comboMeterFillAmount, comboMeterMaxAmountMax;
     public int comboRank;
     public Text comboRankText, comboKillCountText, maxComboKillCountText;
     public int comboKillCount, comboKillCountMax;
     public int currentCoins, totalCoins;
+    public float expMultiplier;
     public float invisibilityFramesRoll, invisibilityFramesAfterDamage, moveSpeed;
     public bool canTakeDamage;
     public float iceChance, fireChance;
@@ -41,52 +40,73 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public float magicCooldown, magicStrength;
     public float staminaCoolDown;
     public StageProperties stageProperties;
+    public float magnetDistance;
+    public float frozenTimer;
+    public float knockBasckStrength, evadeChance;
+    public float lifeStealChance, lifestealamount, thunderChance;
+    public float stageExtraDamage, stageExtraMaxHp, stageExtraSpeed, stageExtraIceChance, stageExtraFireChance, 
+        stageExtraStunTime, stageExtraFirePower,stageExtraFrozenTime, stageExtraEarthPower, stageExtraThunderPower,
+        stageExtraProjectileRange, stageExtraProjectileSpeed, stageExtraRegenRate, stageExtraLifeStealChance, stageExtraLifeStealAmount,
+        stageExtraMagnetDistance, stageExtraKnockBackStrength, stageExtraCriticalChance, stageExtraCriticalDamagePower, stageExtraEvadeChance,
+        stageExtraDefence, stageExtraInviAfterDamage, stageExtraMagicDistance, stageExtraExpMultiplier;
+    
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         stageProperties = FindFirstObjectByType<StageProperties>();
         animator = GetComponent<Animator>();
         SetPlayerStats();
+        maxHp = 100 + PlayerPrefs.GetFloat("maxHp");
+        hp = maxHp;
+        exp = 0;
+        maxExp = 50;
 
 
     }
 
     public void SetPlayerStats()
     {
+      
         maxMana = 50 + PlayerPrefs.GetFloat("maxMp");
         mana = maxMana;
         magicStrength = 1 +  PlayerPrefs.GetFloat("magicPower");
-        manaRegenRate = 1f + PlayerPrefs.GetFloat("mpRegRate");
-        float basmagiccooldown = 5;
+        manaRegenRate = 2f + PlayerPrefs.GetFloat("mpRegRate");
+        AOEDistance = 5f + stageExtraMagicDistance;
+        float basmagiccooldown = 6;
         magicCooldown = basmagiccooldown - PlayerPrefs.GetFloat("magicCooldown");
-        iceChance = 0.01f +  PlayerPrefs.GetFloat("iceChance");
-        fireChance = 0.01f  +  PlayerPrefs.GetFloat("fireChance");
-        enemyStunTime = 0.12f;
+        iceChance = 0.01f +  PlayerPrefs.GetFloat("iceChance") + stageExtraIceChance;
+        fireChance = 0.01f  +  PlayerPrefs.GetFloat("fireChance") + stageExtraFireChance;
+        enemyStunTime = 0.25f + stageExtraStunTime;
         canTakeDamage = true;
         moveSpeed = PlayerPrefs.GetFloat("moveSpeed");
-        animator.speed = 0.45f+ moveSpeed;
+        animator.speed = 0.45f+ moveSpeed + stageExtraSpeed;
         comboRank = 1;
         comboMeterMaxAmountMax = 100;
-        fireDamage = 2.5f * magicStrength;
-        iceDamage = 0.55f *  magicStrength;
-        earthDamage = 1.5f * magicStrength;
-        maxHp = 150 + PlayerPrefs.GetFloat("maxHp");
-        hp = maxHp;
-        hpRegenRate = 0.0f + PlayerPrefs.GetFloat("hpRegRate");
-        baseDamage = 9f + PlayerPrefs.GetFloat("physicalAttack");
-        projectileRange = 2.5f + PlayerPrefs.GetFloat("weaponRange");
-        projectileSpeed = 5f  + PlayerPrefs.GetFloat("weaponReach");
-        maxCritChance = 0.01f +  PlayerPrefs.GetFloat("criticalChance");
-        critDamageMultiplier = 1.1f +  PlayerPrefs.GetFloat("criticalDamage");
-        invisibilityFramesRoll = 0.75f;
-        invisibilityFramesAfterDamage = 0.25f;
-        float basestamina = 5;
+        fireDamage = 1.5f * magicStrength + stageExtraFirePower;
+        iceDamage = 1.5f *  magicStrength;
+        thunderDamage = 1.5f * magicStrength + stageExtraThunderPower;
+        earthDamage = 1.5f * magicStrength + stageExtraEarthPower;
+        maxHp = 100 + PlayerPrefs.GetFloat("maxHp") + stageExtraMaxHp;
+        hpRegenRate = 0.0f + PlayerPrefs.GetFloat("hpRegRate") + stageExtraRegenRate;
+        baseDamage = 7.5f + PlayerPrefs.GetFloat("physicalAttack") + stageExtraDamage;
+        projectileRange = 5.5f + PlayerPrefs.GetFloat("weaponRange") + stageExtraProjectileRange;
+        projectileSpeed = 4f  + PlayerPrefs.GetFloat("weaponReach") + stageExtraProjectileSpeed;
+        maxCritChance = 0.01f +  PlayerPrefs.GetFloat("criticalChance") + stageExtraCriticalChance;
+        critDamageMultiplier = 1.95f +  PlayerPrefs.GetFloat("criticalDamage") +  stageExtraCriticalDamagePower;
+        invisibilityFramesRoll = 1f;
+        invisibilityFramesAfterDamage = 0.5f + stageExtraInviAfterDamage;
+        float basestamina = 3;
         staminaCoolDown = basestamina -  PlayerPrefs.GetFloat("staminaCoolDown");
-        exp = 0;
-        maxExp = 50;
-
-
-
+        defence = 1f + stageExtraDefence;
+        lifestealamount = 10 + stageExtraLifeStealAmount;
+        thunderChance = 0.01f;
+        lifeStealChance = 0.005f + stageExtraLifeStealChance;
+        frozenTimer = 1f + stageExtraFrozenTime;
+        knockBasckStrength = 150 + stageExtraKnockBackStrength;
+        evadeChance = 0.005f + stageExtraEvadeChance;
+        magnetDistance = 2f + stageExtraMagnetDistance;
+        expMultiplier = 1f + stageExtraExpMultiplier;
     }
 
     // Update is called once per frame
@@ -96,7 +116,6 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         RewardMethod();
         SetAnimator();
         SetBaseAttributes();
-        ShieldMethod();
         ComboMeterSetup();
         OnDeathScreen();
 
@@ -141,34 +160,26 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         {
             hp = maxHp;
         }
-        
-        
+
+        if (AOEDistance > 40)
+        {
+            AOEDistance = 40;
+        }
+
         hp += hpRegenRate * Time.deltaTime;
         hpBar.fillAmount = hp / maxHp;
         
         expMeter.fillAmount = exp / maxExp;
         if (exp > maxExp)
         {
+           
+            stageProperties.isPaused =  true;
             stageProperties.isLevelingUp = true;
-            stageProperties.isPaused = true;
             exp = 0;
-            maxExp += 10;
+            maxExp += 25;
         }
 
     }
-
-    private void ShieldMethod()
-    {
-        if (fireShieldOn)
-        {
-            fireshield.SetActive(true);
-        }
-        else
-        {
-            fireshield.SetActive(false);
-        }
-    }
-
     private void SetAnimator()
     {
         if (animator.speed > 1.5f)
@@ -181,7 +192,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     {
         if (currentCoins > 0)
         {
-            currentCashText.text = currentCoins + " X "+ comboRank;
+            currentCashText.text = currentCoins.ToString();
         }
         else
         {
@@ -255,30 +266,31 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     
     public void TakeDamage(float damage)
     {
-        if (canTakeDamage)
+        float evadeChanceRandom = Random.value;
+        switch (canTakeDamage)
         {
-            hp -= damage + defence;
-            StartCoroutine("InvincibleFramesDamage");
-            if (comboKillCount > comboKillCountMax)
-            {
-                comboKillCountMax =  comboKillCount;
-            }
-            CombatText.Spawn(TextStyle.DamagePlayer,"-" +damage.ToString("F1"), transform.position,null);
-            comboMeterFillAmount += 1f;
-            comboKillCount = 0;
-            comboRank = -1;
-            if (hp <= 0)
-            {
-                Time.timeScale = 0.0001f;
-            }
-            
+            case true:
+                if (evadeChanceRandom < evadeChance)
+                {
+                    CombatText.Spawn(TextStyle.Dodge,"ENEMY MISSED", transform.position,null);
+                }
+                else
+                {
+                    hp -= (damage - defence);
+                    StartCoroutine("InvincibleFramesDamage");
+                    if (comboKillCount > comboKillCountMax)
+                    {
+                        comboKillCountMax =  comboKillCount;
+                    }
+                    CombatText.Spawn(TextStyle.DamagePlayer,"-" +damage.ToString("F1"), transform.position,null);
+                    comboMeterFillAmount += 1f;
+                    comboKillCount = 0;
+                    comboRank = -1;
+                }
+
+              
+                break;
         }
-        
-        CombatText.Spawn(TextStyle.Dodge,"-" +"ENEMY MISSED", transform.position,null);
-
-       
-
-        
     }
 
     private IEnumerator InvincibleFramesDamage()

@@ -14,7 +14,9 @@ public class StageManager : MonoBehaviour
     public GameObject stageGround;
     public GameObject player;
     public AudioSource stageMusic;
+    public AudioSource fxMusic;
     public AudioClip[] songs;
+    public AudioClip[] fx;
     public Material stageGroundMaterial;
     public int enemyCount;
     public bool canSpawn;
@@ -32,10 +34,13 @@ public class StageManager : MonoBehaviour
     public Vector3 stageOffset;
     public float waveWeight;
     public int enemyVariationMax;
-    public int randStage = Random.Range(0, 4);
     public GameObject [] stages;
     public GameObject[] bosses;
     public StageProperties stageProperties;
+    public float hpAddition;
+    public float speedIncrease;
+    public float damageIncrease;
+    public GameObject[] portals;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     private void Awake()
@@ -44,27 +49,29 @@ public class StageManager : MonoBehaviour
 
     void Start()
     {
+        hpAddition = 0;
+        speedIncrease = 0;
         stageProperties = FindFirstObjectByType<StageProperties>();
         waveStartnumber = PlayerPrefs.GetInt("startWave");
-        difficulty = PlayerPrefs.GetInt("difficulty");
+        difficulty = 10;
         enemyVariationMax = 2;
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
         Screen.SetResolution(1920, 1080, true);
         player = GameObject.FindGameObjectWithTag("Player");
-        spawnTimer = 1.25f;
+        spawnTimer = 0.75f;
         spawnRate = 1;
         cooldownTimer = 1f;
         canSpawn = true;
         waveCount = waveStartnumber;
-        maxEnemySpawn = 10 + difficulty;
+        maxEnemySpawn = 20 + difficulty;
         enemiesToKill = maxEnemySpawn;
         killCount = 0;
         isWaveFinished = false;
         if (difficulty > 10)
         {
-            stages[0].SetActive(false);
-            stages[1].SetActive(true);
+            stages[0].SetActive(true);
+            stages[1].SetActive(false);
         }
 
         if (difficulty <= 10)
@@ -94,37 +101,42 @@ public class StageManager : MonoBehaviour
             if (!isWaveFinished)
             {
                 
-                //canSpawn = false;
-                cooldownTimer = 0f;
+                cooldownTimer = 0.5f;
                 waveCount += 1;
                 killCount = 0;
-                canSpawn = true;
+                canSpawn = false;
                 spawnCount = 0;
                 waveWeight = 0;
                 if (waveCount % 1 == 0)
                 {
-                    maxEnemySpawn += 10;
-                    
-                    
+                    maxEnemySpawn += 5;
+                    GameObject port = Instantiate(portals[Random.Range(0, portals.Length)], player.transform.position+ new Vector3(0,1,2), Quaternion.identity);
+                    int skillpoint = PlayerPrefs.GetInt("currentSkillPoints");
+                    PlayerPrefs.SetInt("currentSkillPoints", skillpoint + 1);
+                    fxMusic.PlayOneShot(fx[0]);
+
+
                 }
                 if (waveCount % 2 == 0)
+                {
+                    
+                    damageIncrease += 0.02f;
+                    speedIncrease += 0.06f;
+                    hpAddition += 5f;
+                    spawnTimer -= 0.015f;
+
+
+                }
+                
+               
+             
+                
+                if (waveCount % 5 == 0)
                 {
                     enemyVariationMax += 1;
                     int skillpoint = PlayerPrefs.GetInt("currentSkillPoints");
-                    PlayerPrefs.SetInt("currentSkillPoints", skillpoint + 1);
-                }
-                if (waveCount % 4 == 0)
-                {
-                    spawnTimer -= 0.1f;
-                }
-                if (waveCount % 2 == 0)
-                {
                     GameObject boss = Instantiate(bosses[Random.Range(0, bosses.Length)], player.transform.position + new Vector3(0,0,10f), Quaternion.identity);
-                    
-                }
-                
-                if (waveCount % 10 == 0)
-                {
+                    difficulty += 5;
                     maxEnemySpawn += difficulty;
                 }
                 
@@ -144,16 +156,16 @@ public class StageManager : MonoBehaviour
             enemiesToKill = spawnCount;
         }
 
-        if (maxEnemySpawn >= 300)
+        if (maxEnemySpawn >= 200)
         {
-            maxEnemySpawn = 300;
+            maxEnemySpawn = 200;
             enemiesToKill = maxEnemySpawn;
         }
         
 
-        if (spawnTimer <= 0.25f)
+        if (spawnTimer <= 0.3f)
         {
-            spawnTimer = 0.25f;
+            spawnTimer = 0.3f;
         }
 
 

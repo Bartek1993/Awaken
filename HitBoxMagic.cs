@@ -1,9 +1,10 @@
 using System;
+using FAE;
 using UnityEngine;
 
 public class HitBoxMagic : MonoBehaviour
 {
-    public GameObject iceAge, fireStorm, earthBound, thunderStorm;
+    public GameObject iceAge, fireStorm, earthBound, thunderStorm, laserTrap;
     public UIControllsButtons uiControlls;
     public PlayerStats playerStats;
     public int getMagicID;
@@ -16,28 +17,37 @@ public class HitBoxMagic : MonoBehaviour
     {
         playerStats = FindFirstObjectByType<PlayerStats>();
         getMagicID = uiControlls.magicIdentity;
+        hitboxSize = playerStats.AOEDistance;
         switch (getMagicID)
         {
             case 0:
-                hitboxSize = 5;
+                
                 iceAge.SetActive(true);
                 break;
             case 1:
-                hitboxSize = 5;
+                
                 Collider [] colliders = Physics.OverlapSphere(transform.position, 5f, vegetationMask);
                 foreach (Collider col in colliders)
                 {
                     GameObject fire = Instantiate(fireObject, col.transform.position, col.transform.rotation);
                     fire.transform.localScale = col.transform.localScale;
                     fire.transform.parent = null;
-                    Destroy(fire, 10f);
-                    Destroy(col.gameObject,3);
+                    Destroy(fire, 4f);
+                    Destroy(col.gameObject,3.5f);
                 }
                 fireStorm.SetActive(true);
                 break;
             case 2:
-                hitboxSize = 2;
+                
+                thunderStorm.SetActive(true);
+                break;
+            case 3:
+                
                 earthBound.SetActive(true);
+                break;
+            case 4:
+                
+                laserTrap.SetActive(true);
                 break;
         }
     }
@@ -63,7 +73,13 @@ public class HitBoxMagic : MonoBehaviour
                     enemy.TakeDamage(playerStats.fireDamage);
                     break;
                 case 2:
+                    enemy.TakeDamage(playerStats.thunderDamage);
+                    break;
+                case 3:
                     enemy.TakeDamage(playerStats.earthDamage);
+                    break;
+                case 4:
+                    enemy.TakeDamage(playerStats.thunderDamage);
                     break;
             }
         }
@@ -84,11 +100,11 @@ public class HitBoxMagic : MonoBehaviour
                     if (timer > 0.25f)
                     {
                         timer = 0;
-                        enemy.TakeDamage(playerStats.iceDamage);
+                        //enemy.TakeDamage(playerStats.iceDamage);
                     }
                     break;
                 case 1:
-                    if (timer > 0.25f)
+                    if (timer > 0.35f)
                     {
                         timer = 0;
                         enemy.TakeDamage(playerStats.fireDamage);
@@ -97,10 +113,24 @@ public class HitBoxMagic : MonoBehaviour
                     
                     break;
                 case 2:
-                    if (timer > 0.15f)
+                    if (timer > 0.35f)
+                    {
+                        timer = 0;
+                        enemy.TakeDamage(playerStats.thunderDamage);
+                    }
+                    break;
+                case 3:
+                    if (timer > 0.35f)
                     {
                         timer = 0;
                         enemy.TakeDamage(playerStats.earthDamage);
+                    }
+                    break;
+                case 4:
+                    if (timer > 0.35f)
+                    {
+                        timer = 0;
+                        enemy.TakeDamage(playerStats.thunderDamage);
                     }
                     break;
             }

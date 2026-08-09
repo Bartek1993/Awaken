@@ -45,7 +45,7 @@ public class hitBoxEnemy : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             other.GetComponent<PlayerStats>().TakeDamage(damage);
-            Destroy(gameObject,0.001f);
+            Destroy(gameObject,0.01f);
         }
     }
 }

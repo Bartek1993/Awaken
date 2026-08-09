@@ -38,6 +38,7 @@ public abstract class AbstractEnemy : MonoBehaviour,  ICommonMethods
     public float multiplier;
     public GameObject[] rewards;
     public bool isFire, isIce;
+    public float frozenTime, slowDownTime;
     //public int waveDifficulty;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -86,7 +87,6 @@ public abstract class AbstractEnemy : MonoBehaviour,  ICommonMethods
             go.GetComponent<hitBoxEnemy>().isFire = isFire;
             go.GetComponent<hitBoxEnemy>().isIce = isIce;
             go.GetComponent<hitBoxEnemy>().isStatic = false;
-            //go.GetComponent<hitBoxEnemy>().damage = player.GetComponent<PlayerStats>().maxHp * 0.025f;
         }
         
     }

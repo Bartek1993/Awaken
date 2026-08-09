@@ -18,7 +18,7 @@ public class hitBox : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip [] audioClip;
     public GameObject[] hitFX;
-    public float iceValue, fireValue;
+    public float iceValue, fireValue,lifestealchanceValue;
     public bool isCameraShake;
     public CinemachineBasicMultiChannelPerlin [] basicMultiChannelPerlin;
     private void OnDisable()
@@ -55,6 +55,7 @@ public class hitBox : MonoBehaviour
         }
         fireValue = Random.value;
         iceValue = Random.value;
+        lifestealchanceValue = Random.value;
         if (iceValue < player.GetComponent<PlayerStats>().iceChance)
         {
             hitFX[0].SetActive(true);
@@ -85,6 +86,7 @@ public class hitBox : MonoBehaviour
     {
         if (other.TryGetComponent(out AbstractEnemy enemy))
         {
+
             if (isCameraShake)
             {
                 StartCoroutine("ShakeCamera");
@@ -124,11 +126,11 @@ public class hitBox : MonoBehaviour
     {
         foreach (var VARIABLE in basicMultiChannelPerlin)
         {
-            VARIABLE.FrequencyGain = 30f;
+            VARIABLE.FrequencyGain = 40f;
             VARIABLE.AmplitudeGain = 1.2f;
                 ;
         }
-        yield return new WaitForSecondsRealtime(0.07f);
+        yield return new WaitForSecondsRealtime(0.075f);
         foreach (var VARIABLE in basicMultiChannelPerlin)
         {
             VARIABLE.AmplitudeGain = 1f;

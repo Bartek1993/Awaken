@@ -11,13 +11,14 @@ public interface ICollectable
 public class Collectable : MonoBehaviour, ICollectable
 {
     public int collectableID;
-    float distance;
+    float distance, playerDistance;
     public GameObject player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         player =  GameObject.FindGameObjectWithTag("Player");
         Destroy(gameObject, 15f);
+        playerDistance = player.GetComponent<PlayerStats>().magnetDistance;
     }
 
     // Update is called once per frame
@@ -29,14 +30,14 @@ public class Collectable : MonoBehaviour, ICollectable
         switch (collectableID)
         {
             case 1:
-                if (distance <= 5f)
+                if (distance <= playerDistance)
                 {
                     transform.position = Vector3.Lerp(transform.position, player.transform.position + Vector3.up, 12f * Time.deltaTime);
                 }
 
                 break;
             case 2:
-                if (distance <= 3f)
+                if (distance <= playerDistance)
                 {
                     transform.position = Vector3.Lerp(transform.position, player.transform.position + Vector3.up, 10f * Time.deltaTime);
                 }
@@ -53,7 +54,7 @@ public class Collectable : MonoBehaviour, ICollectable
                 playerStats.CollectReward();
                 break;
             case 2:
-                playerStats.exp += 10;
+                playerStats.exp += 10 * playerStats.expMultiplier;
                 break;
         }
         

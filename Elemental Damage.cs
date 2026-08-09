@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ElementalDamage : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class ElementalDamage : MonoBehaviour
         {
             if (timer > 0.75f && enemy.enemyType != AbstractEnemy.EnemyType.Tank)
             {
-                enemy.TakeDamage(0.1f);
+                enemy.TakeDamage(enemy.hp * Random.Range(0.02f, 0.05f));
                 timer = 0;
             }
         }

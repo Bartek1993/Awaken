@@ -18,7 +18,7 @@ public class MENU : MonoBehaviour
     public GameObject[] UIWindows;
     public GameObject Player;
     public GameObject waveCamera, characterCamera;
-    public GameObject wavePanel, characterPanel, statsPanel;
+    public GameObject wavePanel, characterPanel;
     public int startWave;
     public Slider waveSlider;
     public Text waveText;
@@ -35,22 +35,13 @@ public class MENU : MonoBehaviour
     public string currentSession;
     public Text sessionText;
     public string currentUsername, currentUserID, currentUsernamePassword;
-    public PlayerStats playerStats;
-    public Text[] playerStatsText;
-    public Text[] playerStatNamesText;
-    public int currentSkillPoints, totalAllocatedSkillPoints;
-    public Text skillpointsText;
-    public Button[] buttonsSkills;
-    public float vitFill, strengthFill, agilityFill, mindFill, elementalFill;
     void Start()
     {
         score = PlayerPrefs.GetInt("score");
         SetPlayerPrefs();
-        playerStats = FindFirstObjectByType<PlayerStats>();
-        playerStats.SetPlayerStats();
         TopBar.SetActive(false);
         startWave = 1;
-        difficulty = PlayerPrefs.GetInt("difficulty");
+        difficulty = 10;
         UIToggleMode = false;
         difficultyText.text = difficutyName;
 
@@ -63,27 +54,7 @@ public class MENU : MonoBehaviour
         {
             difficulty = 10;
         }
-
-        if (currentSkillPoints <= 0)
-        {
-            currentSkillPoints = 0;
-        }
-        if (currentSkillPoints <= 0)
-        {
-            foreach (Button button in buttonsSkills)
-            {
-                button.interactable = false;
-            }
-            
-        }
-        else
-        {
-            foreach (Button button in buttonsSkills)
-            {
-                button.interactable = true;
-            }
-        }
-
+        
         switch (difficulty)
         {
             case 10:
@@ -115,7 +86,6 @@ public class MENU : MonoBehaviour
                 VARIABLE.SetActive(false);
             }
         }
-        GetPlayerStats();
     }
  private void SetPlayerPrefs()
     {
@@ -244,33 +214,7 @@ public class MENU : MonoBehaviour
         notification.PlayOneShot(notificationClip[0]);
         yield return new WaitForSeconds(2f);
     }
-
-    public void GetPlayerStats()
-    {
-       
-        currentSkillPoints =  PlayerPrefs.GetInt("currentSkillPoints");
-        skillpointsText.text = "SKILL POINTS: " + currentSkillPoints;
-        playerStatsText[0].text = "" + playerStats.maxHp;
-        playerStatsText[1].text = "" + playerStats.staminaCoolDown.ToString("F2") + " sec";
-        playerStatsText[2].text = "" + playerStats.baseDamage;
-        playerStatsText[3].text = "" + playerStats.maxCritChance.ToString("F2") + " %";;
-        playerStatsText[4].text = "" + playerStats.critDamageMultiplier.ToString("F2") + " %";
-        playerStatsText[5].text = "" + playerStats.magicCooldown.ToString("F1") + "sec";
-        playerStatsText[6].text = "" + playerStats.magicCooldown +  " sec";
-        playerStatsText[7].text = "" + playerStats.magicStrength;
-        playerStatsText[8].text = "" + playerStats.fireChance.ToString("F2") + " %";
-        playerStatsText[9].text = "" + playerStats.iceChance.ToString("F2") + "%";
-        playerStatsText[10].text = "" + playerStats.animator.speed.ToString("F2");
-        playerStatsText[11].text = "" + playerStats.projectileRange.ToString("F2");
-        playerStatsText[12].text = "" + playerStats.projectileSpeed.ToString("F2");
-        
-        playerStatNamesText[0].text = "VITALITY LV " + PlayerPrefs.GetInt("VitalityLV");
-        playerStatNamesText[1].text = "STRENGTH LV " + PlayerPrefs.GetInt("StrengthLV");
-        playerStatNamesText[2].text = "AGILITY LV" + PlayerPrefs.GetInt("AgilityLV");
-        playerStatNamesText[3].text = "WISDOM LV " + PlayerPrefs.GetInt("MindLV");
-        playerStatNamesText[4].text = "ELEMENTAL LV " + PlayerPrefs.GetInt("ElementalLV");
-        
-    }
+    
 
 
 
@@ -307,7 +251,7 @@ public class MENU : MonoBehaviour
         characterCamera.SetActive(true);
         wavePanel.SetActive(false);
         characterPanel.SetActive(true);
-        statsPanel.SetActive(false);
+        
     }
 
     public void onWaveButton()
@@ -316,7 +260,6 @@ public class MENU : MonoBehaviour
         characterCamera.SetActive(false);
         wavePanel.SetActive(true);
         characterPanel.SetActive(false);
-        statsPanel.SetActive(false);
         score = PlayerPrefs.GetInt("score");
         difficulty = PlayerPrefs.GetInt("difficulty");
     }
@@ -328,7 +271,6 @@ public class MENU : MonoBehaviour
         characterCamera.SetActive(true);
         wavePanel.SetActive(false);
         characterPanel.SetActive(false);
-        statsPanel.SetActive(true);
         
     }
 
@@ -342,69 +284,7 @@ public class MENU : MonoBehaviour
     {
         Player.transform.Rotate(new Vector3(0, 22.5f, 0));
     }
-
-    public void AddPlayerStat(int id)
-    {
-        currentSkillPoints -= 1;
-        PlayerPrefs.SetInt("currentSkillPoints", currentSkillPoints);
-        int totalSkillPoints = PlayerPrefs.GetInt("totalSkillPoints");
-        PlayerPrefs.SetInt("totalSkillPoints", totalSkillPoints + 1);
-        switch (id)
-        {
-            case 1:
-                int vit =  PlayerPrefs.GetInt("VitalityLV");
-                PlayerPrefs.SetInt("VitalityLV", vit +1);
-                float maxHp = PlayerPrefs.GetFloat("maxHp");
-                PlayerPrefs.SetFloat("maxHp", maxHp + 2.5f);
-                float staminaCooldownRate = PlayerPrefs.GetFloat("staminaCoolDown");
-                PlayerPrefs.SetFloat("staminaCoolDown", staminaCooldownRate + 0.02f);
-                break;
-            case 2:
-                int strength =  PlayerPrefs.GetInt("StrengthLV");
-                PlayerPrefs.SetInt("StrengthLV", strength +1);
-                float baseattack = PlayerPrefs.GetFloat("physicalAttack");
-                PlayerPrefs.SetFloat("physicalAttack", baseattack + 0.35f);
-                float critticalChance =  PlayerPrefs.GetFloat("criticalChance");
-                PlayerPrefs.SetFloat("criticalChance", critticalChance + 0.0025f);
-                float critDamage = PlayerPrefs.GetFloat("criticalDamage");
-                PlayerPrefs.SetFloat("criticalDamage", critDamage + 0.0025f);
-                break;
-            case 3:
-                int agility =  PlayerPrefs.GetInt("AgilityLV");
-                PlayerPrefs.SetInt("AgilityLV", agility +1);
-                float weaponRange = PlayerPrefs.GetFloat("weaponRange");
-                PlayerPrefs.SetFloat("weaponRange", weaponRange + 0.015f);
-                float weaponReach = PlayerPrefs.GetFloat("weaponReach");
-                PlayerPrefs.SetFloat("weaponReach", weaponReach + 0.015f);
-                float playermovement = PlayerPrefs.GetFloat("moveSpeed");
-                PlayerPrefs.SetFloat("moveSpeed", playermovement + 0.001f);
-                break;
-            case 4:
-                int mind =  PlayerPrefs.GetInt("MindLV");
-                PlayerPrefs.SetInt("MindLV", mind + 1);
-                float maxMp = PlayerPrefs.GetFloat("maxMp");
-                PlayerPrefs.SetFloat("maxMp", maxMp + 1f);
-                float mpRegenRate = PlayerPrefs.GetFloat("magicCooldown");
-                PlayerPrefs.SetFloat("magicCooldown", mpRegenRate + 0.015f);
-                float magicPower = PlayerPrefs.GetFloat("magicPower");
-                PlayerPrefs.SetFloat("magicPower", magicPower + 0.25f);
-                break;
-            case 5:
-                int elemental =  PlayerPrefs.GetInt("ElementalLV");
-                PlayerPrefs.SetInt("ElementalLV", elemental + 1);
-                float ice = PlayerPrefs.GetFloat("iceChance");
-                PlayerPrefs.SetFloat("iceChance", ice + 0.005f);
-                float fire = PlayerPrefs.GetFloat("fireChance");
-                PlayerPrefs.SetFloat("fireChance", fire + 0.005f);
-                break;
-        }
-      
-        playerStats.SetPlayerStats();
-      
-        
-       
-       
-    }
+    
 
     public void StartGame(GameObject button)
     {
@@ -452,29 +332,6 @@ public class MENU : MonoBehaviour
             }
 
         }));
-    }
-
-    public void GetSkillPoints()
-    {
-        currentSkillPoints = PlayerPrefs.GetInt("currentSkillPoints");
-        skillpointsText.text = currentSkillPoints.ToString();
-       
-       
-     
-    }
-
-    public void GetPlayerLevels()
-    {
-        playerStatNamesText[0].text = "VITALITY LV " + PlayerPrefs.GetInt("VitalityLV");
-        playerStatNamesText[1].text = "STRENGTH LV " + PlayerPrefs.GetInt("StrengthLV");
-        playerStatNamesText[2].text = "AGILITY LV " + PlayerPrefs.GetInt("AgilityLV");
-        playerStatNamesText[3].text = "WISDOM LV " + PlayerPrefs.GetInt("MindLV");
-        playerStatNamesText[4].text = "ELEMENTAL LV " + PlayerPrefs.GetInt("ElementalLV");
-        
-        
-        
-
-
     }
 
 }

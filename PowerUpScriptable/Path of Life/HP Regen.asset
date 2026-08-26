@@ -16,14 +16,14 @@ MonoBehaviour:
   isPernament: 0
   cardLevel: 1
   PowerUpName: VITALITY
-  PowerUpDescription: REGENERATE 0.15 HP PER SECOND
+  PowerUpDescription: HP REGENERATION UP
   PowerUpColor: {r: 0.21605001, g: 0.5245282, b: 0.010886423, a: 1}
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
   baseHp: 0
   maxHp: 0
-  hpRegenRate: 0.15
+  hpRegenRate: 0.025
   baseDefense: 0
   projectileSpeed: 0
   projectileRange: 0
@@ -45,3 +45,7 @@ MonoBehaviour:
   evadeChance: 0
   lifestealamount: 0
   lifestealchance: 0
+  expMultiplier: 0
+  piercePower: 0
+  magicCritRate: 0
+  magicCritDamage: 0

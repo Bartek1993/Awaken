@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fffee95622f2de4bb6812977097314b, type: 3}
-  m_Name: LIFESTEALAMOUNT
+  m_Name: MAX HP INCREASE
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
-  card: 3
+  card: 2
   isPernament: 0
   cardLevel: 1
   PowerUpName: VITALITY
-  PowerUpDescription: LIFE STEAL AMOUNT + 1
+  PowerUpDescription: INCREASE MAX HP + 2.5HP
   PowerUpColor: {r: 0.21605001, g: 0.5245282, b: 0.010886423, a: 1}
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
   baseHp: 0
-  maxHp: 0
+  maxHp: 2.5
   hpRegenRate: 0
   baseDefense: 0
   projectileSpeed: 0
@@ -43,5 +43,9 @@ MonoBehaviour:
   fireDamage: 0
   knockbackStrength: 0
   evadeChance: 0
-  lifestealamount: 1
+  lifestealamount: 0
   lifestealchance: 0
+  expMultiplier: 0
+  piercePower: 0
+  magicCritRate: 0
+  magicCritDamage: 0

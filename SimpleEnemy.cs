@@ -24,16 +24,16 @@ public class SimpleEnemy : AbstractEnemy
         stageManager = FindAnyObjectByType<StageManager>();
         hp = Random.Range(minHp, maxHp) + stageManager.difficulty;
         hp += stageManager.hpAddition;
-        stageManager.enemyCount++;
+        stageManager.enemyCount+=1;
        
-        if (animator.speed > 2.5f)
+        if (animator.speed > 3f)
         {
-            animator.speed = 2.5f;
+            animator.speed = 3f;
         }
 
         animator.speed = animatorStartSpeed + stageManager.speedIncrease;
         damage = Random.Range(minDamage + stageManager.damageIncrease, maxDamage + stageManager.damageIncrease) * stageManager.difficulty;
-
+       
 
 
     }
@@ -86,7 +86,7 @@ public class SimpleEnemy : AbstractEnemy
 
     public override IEnumerator isOnFrozen()
     {
-        CombatText.Spawn(TextStyle.DamagePlayer,"FROZEN", transform.position,null);
+        CombatText.Spawn(TextStyle.DamagePlayer,"FROZEN", transform.position,transform);
         animator.speed = 0.25f;
         yield return new WaitForSeconds(player.GetComponent<PlayerStats>().frozenTimer);
         animator.speed = animatorStartSpeed;
@@ -110,9 +110,8 @@ public class SimpleEnemy : AbstractEnemy
         stageManager.killCount++;
         player.GetComponent<PlayerStats>().comboKillCount += 1;
         player.GetComponent<PlayerStats>().totalEnemiesKilled += 1;
-        stageManager.enemyCount--;
+        stageManager.spawnCount--;
         Vector3 coinPos = new Vector3(0, 1f, 0);
-        
         if (enemyType == EnemyType.Explosive)
         {
             GameObject exp =Instantiate(rewards[1], transform.position+ coinPos, Quaternion.identity);

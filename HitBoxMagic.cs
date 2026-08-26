@@ -1,6 +1,7 @@
 using System;
 using FAE;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class HitBoxMagic : MonoBehaviour
 {
@@ -12,12 +13,16 @@ public class HitBoxMagic : MonoBehaviour
     public LayerMask vegetationMask, enemyMask;
     public GameObject fireObject;
     public float hitboxSize;
+
+    public float magicCriticalChance, magicCriticalDamage;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playerStats = FindFirstObjectByType<PlayerStats>();
         getMagicID = uiControlls.magicIdentity;
         hitboxSize = playerStats.AOEDistance;
+        magicCriticalChance = playerStats.magicCritRate;
+        magicCriticalDamage = playerStats.magicCritDamage;
         switch (getMagicID)
         {
             case 0:
@@ -63,23 +68,51 @@ public class HitBoxMagic : MonoBehaviour
     {
         if (other.TryGetComponent(out AbstractEnemy enemy))
         {
+            var critChance = Random.value;
             switch (getMagicID)
             {
                 case 0:
                     StartCoroutine(enemy.isOnFrozen());
                     break;
                 case 1:
-                   
-                    enemy.TakeDamage(playerStats.fireDamage);
+                    if (critChance < magicCriticalChance)
+                    {
+                        enemy.TakeDamage(playerStats.fireDamage * magicCriticalDamage);
+                    }
+                    else
+                    {
+                        enemy.TakeDamage(playerStats.fireDamage);
+                    }
                     break;
                 case 2:
-                    enemy.TakeDamage(playerStats.thunderDamage);
-                    break;
+                     if (critChance < magicCriticalChance)
+                     {
+                        enemy.TakeDamage(playerStats.thunderDamage * magicCriticalDamage);
+                     }
+                     else
+                     {
+                        enemy.TakeDamage(playerStats.thunderDamage);
+                     }
+                     break;
                 case 3:
-                    enemy.TakeDamage(playerStats.earthDamage);
+                    if (critChance < magicCriticalChance)
+                    {
+                        enemy.TakeDamage(playerStats.earthDamage * magicCriticalDamage);
+                    }
+                    else
+                    {
+                        enemy.TakeDamage(playerStats.earthDamage);
+                    }
                     break;
                 case 4:
-                    enemy.TakeDamage(playerStats.thunderDamage);
+                    if (critChance < magicCriticalChance)
+                    {
+                        enemy.TakeDamage(playerStats.thunderDamage * magicCriticalDamage);
+                    }
+                    else
+                    {
+                        enemy.TakeDamage(playerStats.thunderDamage);
+                    }
                     break;
             }
         }
@@ -93,15 +126,10 @@ public class HitBoxMagic : MonoBehaviour
         
         if (other.TryGetComponent(out AbstractEnemy enemy))
         {
-            
+           
             switch (getMagicID)
             {
                 case 0:
-                    if (timer > 0.25f)
-                    {
-                        timer = 0;
-                        //enemy.TakeDamage(playerStats.iceDamage);
-                    }
                     break;
                 case 1:
                     if (timer > 0.35f)

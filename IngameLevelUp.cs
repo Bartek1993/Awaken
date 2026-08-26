@@ -88,19 +88,21 @@ public class IngameLevelUp : MonoBehaviour
                 int vit =  PlayerPrefs.GetInt("VitalityLV");
                 PlayerPrefs.SetInt("VitalityLV", vit +1);
                 float maxHp = PlayerPrefs.GetFloat("maxHp");
-                PlayerPrefs.SetFloat("maxHp", maxHp + 2.5f);
+                PlayerPrefs.SetFloat("maxHp", maxHp + 5f);
                 float staminaCooldownRate = PlayerPrefs.GetFloat("staminaCoolDown");
-                PlayerPrefs.SetFloat("staminaCoolDown", staminaCooldownRate + 0.02f);
+                PlayerPrefs.SetFloat("staminaCoolDown", staminaCooldownRate + 0.005f);
                 break;
             case 2:
                 int strength =  PlayerPrefs.GetInt("StrengthLV");
                 PlayerPrefs.SetInt("StrengthLV", strength +1);
                 float baseattack = PlayerPrefs.GetFloat("physicalAttack");
-                PlayerPrefs.SetFloat("physicalAttack", baseattack + 0.5f);
+                PlayerPrefs.SetFloat("physicalAttack", baseattack + 1f);
                 float critticalChance =  PlayerPrefs.GetFloat("criticalChance");
-                PlayerPrefs.SetFloat("criticalChance", critticalChance + 0.025f);
+                PlayerPrefs.SetFloat("criticalChance", critticalChance + 0.0015f);
                 float critDamage = PlayerPrefs.GetFloat("criticalDamage");
-                PlayerPrefs.SetFloat("criticalDamage", critDamage + 0.25f);
+                PlayerPrefs.SetFloat("criticalDamage", critDamage + 0.025f);
+                float piercePower = PlayerPrefs.GetFloat("PiercePower");
+                PlayerPrefs.SetFloat("PiercePower", piercePower + 0.005f);
                 break;
             case 3:
                 int agility =  PlayerPrefs.GetInt("AgilityLV");
@@ -110,7 +112,7 @@ public class IngameLevelUp : MonoBehaviour
                 float weaponReach = PlayerPrefs.GetFloat("weaponReach");
                 PlayerPrefs.SetFloat("weaponReach", weaponReach + 0.05f);
                 float playermovement = PlayerPrefs.GetFloat("moveSpeed");
-                PlayerPrefs.SetFloat("moveSpeed", playermovement + 0.002f);
+                PlayerPrefs.SetFloat("moveSpeed", playermovement + 0.0015f);
                 break;
             case 4:
                 int mind =  PlayerPrefs.GetInt("MindLV");
@@ -121,14 +123,18 @@ public class IngameLevelUp : MonoBehaviour
                 PlayerPrefs.SetFloat("magicCooldown", mpRegenRate + 0.015f);
                 float magicPower = PlayerPrefs.GetFloat("magicPower");
                 PlayerPrefs.SetFloat("magicPower", magicPower + 0.25f);
+                float magicCritical = PlayerPrefs.GetFloat("magicCriticalChance");
+                PlayerPrefs.SetFloat("magicCriticalChance", magicCritical + 0.005f);
+                float magicCriticalDamage = PlayerPrefs.GetFloat("MagicCriticalDamage");
+                PlayerPrefs.SetFloat("magicCriticalDamage", magicCriticalDamage + 0.05f);
                 break;
             case 5:
                 int elemental =  PlayerPrefs.GetInt("ElementalLV");
                 PlayerPrefs.SetInt("ElementalLV", elemental + 1);
                 float ice = PlayerPrefs.GetFloat("iceChance");
-                PlayerPrefs.SetFloat("iceChance", ice + 0.005f);
+                PlayerPrefs.SetFloat("iceChance", ice + 0.0015f);
                 float fire = PlayerPrefs.GetFloat("fireChance");
-                PlayerPrefs.SetFloat("fireChance", fire + 0.005f);
+                PlayerPrefs.SetFloat("fireChance", fire + 0.0015f);
                 break;
         }
       

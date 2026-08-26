@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fffee95622f2de4bb6812977097314b, type: 3}
-  m_Name: MAX HP INCREASE
+  m_Name: AOEDistance
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
-  card: 2
+  card: 3
   isPernament: 0
   cardLevel: 1
-  PowerUpName: VITALITY
-  PowerUpDescription: INCREASE MAX HP + 10HP
-  PowerUpColor: {r: 0.21605001, g: 0.5245282, b: 0.010886423, a: 1}
+  PowerUpName: MAGIC
+  PowerUpDescription: Increase Magic Distance
+  PowerUpColor: {r: 0, g: 0.20019908, b: 0.3660378, a: 1}
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
   baseHp: 0
-  maxHp: 10
+  maxHp: 0
   hpRegenRate: 0
   baseDefense: 0
   projectileSpeed: 0
@@ -35,7 +35,7 @@ MonoBehaviour:
   frozenTime: 0
   fireChance: 0
   magnetDistance: 0
-  AOEDistance: 0
+  AOEDistance: 0.5
   magicPower: 0
   iceDamage: 0
   thunderDamage: 0
@@ -45,3 +45,7 @@ MonoBehaviour:
   evadeChance: 0
   lifestealamount: 0
   lifestealchance: 0
+  expMultiplier: 0
+  piercePower: 0
+  magicCritRate: 0
+  magicCritDamage: 0

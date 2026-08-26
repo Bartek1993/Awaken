@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fffee95622f2de4bb6812977097314b, type: 3}
-  m_Name: LifeStealChance
+  m_Name: MAGIC CRITICAL DAMAGE
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
   card: 3
   isPernament: 0
   cardLevel: 1
-  PowerUpName: VITALITY
-  PowerUpDescription: LIFE STEAL CHANCE + 0.05 %
-  PowerUpColor: {r: 0.21605001, g: 0.5245282, b: 0.010886423, a: 1}
+  PowerUpName: MAGIC
+  PowerUpDescription: Increase Magic Critical Damage
+  PowerUpColor: {r: 0, g: 0.20019908, b: 0.3660378, a: 1}
   baseAttack: 0
   critDamageMultiplier: 0
   critChance: 0
@@ -44,4 +44,8 @@ MonoBehaviour:
   knockbackStrength: 0
   evadeChance: 0
   lifestealamount: 0
-  lifestealchance: 0.005
+  lifestealchance: 0
+  expMultiplier: 0
+  piercePower: 0
+  magicCritRate: 0
+  magicCritDamage: 0.15

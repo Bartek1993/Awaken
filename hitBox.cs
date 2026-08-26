@@ -18,9 +18,10 @@ public class hitBox : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip [] audioClip;
     public GameObject[] hitFX;
-    public float iceValue, fireValue,lifestealchanceValue;
+    public float iceValue, fireValue, thunderValue, earthValue, lifestealchanceValue;
     public bool isCameraShake;
     public CinemachineBasicMultiChannelPerlin [] basicMultiChannelPerlin;
+    public bool isStatic;
     private void OnDisable()
     {
         timer = 0;
@@ -41,9 +42,18 @@ public class hitBox : MonoBehaviour
         isCameraShake = true;
         player = GameObject.FindGameObjectWithTag("Player");
         damage = player.GetComponent<PlayerStats>().baseDamage;
-        hitboxRangeX = 1f;
-        hitboxRangeZ = 1f;
-        weaponDistance = player.GetComponent<PlayerStats>().projectileSpeed;
+        hitboxRangeX = player.GetComponent<PlayerStats>().projectileRange * 0.1f;
+        hitboxRangeZ = player.GetComponent<PlayerStats>().projectileRange * 0.1f;
+        
+        isStatic = player.GetComponent<PlayerStats>().isStaticHitBox;
+        if (isStatic)
+        {
+            weaponDistance = 0.15f;
+        }
+        else
+        {
+            weaponDistance = player.GetComponent<PlayerStats>().projectileSpeed;
+        }
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -94,7 +104,11 @@ public class hitBox : MonoBehaviour
 
             if (enemy.enemyType == AbstractEnemy.EnemyType.Tank)
             {
-                Destroy(gameObject,0.1f);
+                Destroy(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject, player.GetComponent<PlayerStats>().piercePower);
             }
 
             if (!audioSource.isPlaying)

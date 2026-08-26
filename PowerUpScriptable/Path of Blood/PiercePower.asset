@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fffee95622f2de4bb6812977097314b, type: 3}
-  m_Name: AOEDistance
+  m_Name: PiercePower
   m_EditorClassIdentifier: Assembly-CSharp::ScripablePowerUP
-  card: 3
+  card: 0
   isPernament: 0
   cardLevel: 1
-  PowerUpName: MAGIC
-  PowerUpDescription: Increase Magic Distance
+  PowerUpName: PHYSICAL
+  PowerUpDescription: SLASH PIERCE POWER
   PowerUpColor: {r: 0, g: 0.20019908, b: 0.3660378, a: 1}
   baseAttack: 0
   critDamageMultiplier: 0
@@ -35,7 +35,7 @@ MonoBehaviour:
   frozenTime: 0
   fireChance: 0
   magnetDistance: 0
-  AOEDistance: 1
+  AOEDistance: 0
   magicPower: 0
   iceDamage: 0
   thunderDamage: 0
@@ -46,3 +46,4 @@ MonoBehaviour:
   lifestealamount: 0
   lifestealchance: 0
   expMultiplier: 0
+  piercePower: 0.5

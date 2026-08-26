@@ -89,6 +89,40 @@ public class MENU : MonoBehaviour
     }
  private void SetPlayerPrefs()
     {
+        if (!PlayerPrefs.HasKey("PiercePower"))
+        {
+            PlayerPrefs.SetFloat("PiercePower", 0.005f);
+        }
+
+        if (!PlayerPrefs.HasKey("PlayerLevel"))
+        {
+            PlayerPrefs.SetInt("PlayerLevel", 1);
+        }
+
+        if (!PlayerPrefs.HasKey("MagicCriticalChance"))
+        {
+            PlayerPrefs.SetFloat("MagicCriticalChance", 0);
+        }
+        if (!PlayerPrefs.HasKey("MagicCriticalDamage"))
+        {
+            PlayerPrefs.SetFloat("MagicCriticalDamage", 1.25f);
+        }
+
+        if (!PlayerPrefs.HasKey("ToxicityMax"))
+        {
+            PlayerPrefs.SetFloat("ToxicityMax", 0);
+        }
+        
+        if(!PlayerPrefs.HasKey("ToxicityThreshold"))
+        {
+            PlayerPrefs.SetFloat("ToxicityThreshold", 0);
+        }
+
+        if (!PlayerPrefs.HasKey("PlayerEXP"))
+        {
+            PlayerPrefs.SetFloat("PlayerEXP", 0);
+        }
+
         if (!PlayerPrefs.HasKey("ElementalLV"))
         {
             PlayerPrefs.SetInt("ElementalLV", 1);
@@ -196,7 +230,7 @@ public class MENU : MonoBehaviour
         if (!PlayerPrefs.HasKey("currentSkillPoints"))
         {
             StartCoroutine("NoSkillPoints");
-            PlayerPrefs.SetInt("currentSkillPoints", 8);
+            PlayerPrefs.SetInt("currentSkillPoints", 1);
         }
         else
         {

@@ -33,15 +33,10 @@ public class AdvancePortal : MonoBehaviour
            
             if(uiControls.interact)
             {
-                Destroy(gameObject);
                 uiControls.interact = false;
-                //stageProp.isPaused = true;
-               // stageProp.isLevelingUp = true;
-                stageManager.canSpawn = true;
-                fogWar.keepRevealedTiles = false;
+                stageProp.LoadNewWave();
 
             }
-            fogWar.keepRevealedTiles = false;
         }
     }
 
@@ -49,12 +44,11 @@ public class AdvancePortal : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            fogWar.keepRevealedTiles = true;
         }
     }
 
     private void OnDestroy()
     {
-        fogWar.keepRevealedTiles = true;
+     //   fogWar.keepRevealedTiles = true;
     }
 }

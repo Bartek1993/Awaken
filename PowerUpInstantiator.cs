@@ -9,7 +9,7 @@ using Random = System.Random;
 public class PowerUpInstantiator : MonoBehaviour
 {
     public GameObject applypowerUpButton, closeWindowButton;
-    public ScripablePowerUP [] powerUps;
+    public ScripablePowerUP [] powerUpsPhysical, powerUpsVitality, powerUpsWisdom, powerUpsAgility, powerUpsElemental;
     public Transform powerUpButtonWindow, ShopWindow;
     public GameObject buttonPrefab;
     private GameObject go;
@@ -25,6 +25,7 @@ public class PowerUpInstantiator : MonoBehaviour
     public string powerUpDetails;
     private void OnEnable()
     {
+        System.GC.Collect();
         powerupDescription.text = "PICK BOOST";
         applypowerUpButton.SetActive(false);
         playerStats = FindFirstObjectByType<PlayerStats>();
@@ -33,23 +34,117 @@ public class PowerUpInstantiator : MonoBehaviour
         closePowerUp = false;
         ShopWindow.gameObject.SetActive(false);
         powerUpButtonWindow.gameObject.SetActive(true);
-        for (var i = 0; i < powerUps.Length; i++)
-        {
-            possibleID.Add(i);
-        }
+        SetPath();
+    }
 
-        for (int a = 0; a < 3; a++)
+    private void SetPath()
+    {
+        if (stageProperties.path[0])
         {
-            int randomIDIndex = UnityEngine.Random.Range(0, possibleID.Count); 
-            currentId = possibleID[randomIDIndex];
-            possibleID.RemoveAt(randomIDIndex);
-            go = Instantiate(buttonPrefab, powerUpButtonWindow);
-            powerUpDetails = powerUps[currentId].PowerUpName +  "\n \n"+ powerUps[currentId].PowerUpDescription;
-            go.GetComponent<SkillButton>().skillNameText.text = powerUpDetails;
-            go.GetComponent<Button>().targetGraphic.color = powerUps[currentId].PowerUpColor;
-            go.GetComponent<SkillButton>().buttonID = currentId;
-            buttons.Add(go);
+            for (var i = 0; i < powerUpsVitality.Length; i++)
+            {
+                possibleID.Add(i);
+            }
+
+            for (int a = 0; a < 3; a++)
+            {
+                int randomIDIndex = UnityEngine.Random.Range(0, possibleID.Count); 
+                currentId = possibleID[randomIDIndex];
+                possibleID.RemoveAt(randomIDIndex);
+                go = Instantiate(buttonPrefab, powerUpButtonWindow);
+                powerUpDetails = powerUpsVitality[currentId].PowerUpName +  "\n \n"+ powerUpsVitality[currentId].PowerUpDescription;
+                go.GetComponent<SkillButton>().skillNameText.text = powerUpDetails;
+                go.GetComponent<Button>().targetGraphic.color = powerUpsVitality[currentId].PowerUpColor;
+                go.GetComponent<SkillButton>().buttonID = currentId;
+                buttons.Add(go);
             
+            }
+        }
+        if (stageProperties.path[1])
+        {
+            for (var i = 0; i < powerUpsWisdom.Length; i++)
+            {
+                possibleID.Add(i);
+            }
+
+            for (int a = 0; a < 3; a++)
+            {
+                int randomIDIndex = UnityEngine.Random.Range(0, possibleID.Count); 
+                currentId = possibleID[randomIDIndex];
+                possibleID.RemoveAt(randomIDIndex);
+                go = Instantiate(buttonPrefab, powerUpButtonWindow);
+                powerUpDetails = powerUpsWisdom[currentId].PowerUpName +  "\n \n"+ powerUpsWisdom[currentId].PowerUpDescription;
+                go.GetComponent<SkillButton>().skillNameText.text = powerUpDetails;
+                go.GetComponent<Button>().targetGraphic.color = powerUpsWisdom[currentId].PowerUpColor;
+                go.GetComponent<SkillButton>().buttonID = currentId;
+                buttons.Add(go);
+            
+            }
+        }
+        if (stageProperties.path[2])
+        {
+            for (var i = 0; i < powerUpsAgility.Length; i++)
+            {
+                possibleID.Add(i);
+            }
+
+            for (int a = 0; a < 3; a++)
+            {
+                int randomIDIndex = UnityEngine.Random.Range(0, possibleID.Count); 
+                currentId = possibleID[randomIDIndex];
+                possibleID.RemoveAt(randomIDIndex);
+                go = Instantiate(buttonPrefab, powerUpButtonWindow);
+                powerUpDetails = powerUpsAgility[currentId].PowerUpName +  "\n \n"+ powerUpsAgility[currentId].PowerUpDescription;
+                go.GetComponent<SkillButton>().skillNameText.text = powerUpDetails;
+                go.GetComponent<Button>().targetGraphic.color = powerUpsAgility[currentId].PowerUpColor;
+                go.GetComponent<SkillButton>().buttonID = currentId;
+                buttons.Add(go);
+            
+            }
+        }
+        
+        if (stageProperties.path[3])
+        {
+            for (var i = 0; i < powerUpsPhysical.Length; i++)
+            {
+                possibleID.Add(i);
+            }
+
+            for (int a = 0; a < 3; a++)
+            {
+                int randomIDIndex = UnityEngine.Random.Range(0, possibleID.Count); 
+                currentId = possibleID[randomIDIndex];
+                possibleID.RemoveAt(randomIDIndex);
+                go = Instantiate(buttonPrefab, powerUpButtonWindow);
+                powerUpDetails = powerUpsPhysical[currentId].PowerUpName +  "\n \n"+ powerUpsPhysical[currentId].PowerUpDescription;
+                go.GetComponent<SkillButton>().skillNameText.text = powerUpDetails;
+                go.GetComponent<Button>().targetGraphic.color = powerUpsPhysical[currentId].PowerUpColor;
+                go.GetComponent<SkillButton>().buttonID = currentId;
+                buttons.Add(go);
+            
+            }
+        }
+        
+        if (stageProperties.path[4])
+        {
+            for (var i = 0; i < powerUpsElemental.Length; i++)
+            {
+                possibleID.Add(i);
+            }
+
+            for (int a = 0; a < 3; a++)
+            {
+                int randomIDIndex = UnityEngine.Random.Range(0, possibleID.Count); 
+                currentId = possibleID[randomIDIndex];
+                possibleID.RemoveAt(randomIDIndex);
+                go = Instantiate(buttonPrefab, powerUpButtonWindow);
+                powerUpDetails = powerUpsElemental[currentId].PowerUpName +  "\n \n"+ powerUpsElemental[currentId].PowerUpDescription;
+                go.GetComponent<SkillButton>().skillNameText.text = powerUpDetails;
+                go.GetComponent<Button>().targetGraphic.color = powerUpsElemental[currentId].PowerUpColor;
+                go.GetComponent<SkillButton>().buttonID = currentId;
+                buttons.Add(go);
+            
+            }
         }
         
     }
@@ -74,7 +169,28 @@ public class PowerUpInstantiator : MonoBehaviour
 
     public void OnApplyPowerUp()
     {
-        powerUps[selectedID].OnClickButton(playerStats);
+        if (stageProperties.path[0])
+        {
+            powerUpsVitality[selectedID].OnClickButton(playerStats);
+        }
+        if (stageProperties.path[1])
+        {
+            powerUpsWisdom[selectedID].OnClickButton(playerStats);
+        }
+        if (stageProperties.path[2])
+        {
+            powerUpsAgility[selectedID].OnClickButton(playerStats);
+        }
+        if (stageProperties.path[3])
+        {
+            powerUpsPhysical[selectedID].OnClickButton(playerStats);
+        }
+        if (stageProperties.path[4])
+        {
+            powerUpsElemental[selectedID].OnClickButton(playerStats);
+        }
+
+        
         ShopWindow.gameObject.SetActive(true);
         powerUpButtonWindow.gameObject.SetActive(false);
         applypowerUpButton.SetActive(false);

@@ -14,14 +14,14 @@ public class SpriteManager : MonoBehaviour
 
     public float timer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void OnEnable()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         playerCamera = Camera.main;
-        for (int a = 0; a < 2500; a++)
+        for (int a = 0; a < 1000; a++)
         {
             GameObject sprite = spritePrefabs[Random.Range(0, spritePrefabs.Length)];
-            sprite.transform.localScale = new Vector3(Random.Range(0.6f,0.7f), Random.Range(0.7f,0.8f), 1);
+            sprite.transform.localScale = new Vector3(Random.Range(0.6f,0.7f), Random.Range(0.8f,0.8f), 1);
             Instantiate(sprite, player.transform.position + new Vector3(Random.Range(-50,50),-0.3f,Random.Range(-50,50)), sprite.transform.rotation);
         }
         stageSprites = GameObject.FindGameObjectsWithTag("Sprite");
@@ -52,5 +52,15 @@ public class SpriteManager : MonoBehaviour
       
         }
         
+    }
+
+    private void OnDisable()
+    {
+        foreach (GameObject sprite in stageSprites)
+        {
+            
+            Destroy(sprite);
+            
+        }
     }
 }

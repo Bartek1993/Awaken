@@ -41,6 +41,11 @@ public class StageManager : MonoBehaviour
     public float speedIncrease;
     public float damageIncrease;
     public GameObject[] portals;
+    public GameObject[] glyphs;
+    public int glyphCount;
+    public int maxEnemyOnScreen;
+    public GameObject [] additionalEnemies;
+    public GameObject StatueOfProgression;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     private void Awake()
@@ -49,22 +54,24 @@ public class StageManager : MonoBehaviour
 
     void Start()
     {
+        StatueOfProgression.SetActive(false);
+        maxEnemyOnScreen = 50;
         hpAddition = 0;
-        speedIncrease = 0;
+        speedIncrease = 0.02f;
         stageProperties = FindFirstObjectByType<StageProperties>();
         waveStartnumber = PlayerPrefs.GetInt("startWave");
         difficulty = 10;
-        enemyVariationMax = 2;
+        enemyVariationMax = 3;
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
         Screen.SetResolution(1920, 1080, true);
         player = GameObject.FindGameObjectWithTag("Player");
-        spawnTimer = 0.75f;
+        spawnTimer = 0.5f;
         spawnRate = 1;
-        cooldownTimer = 1f;
+        cooldownTimer = 0.5f;
         canSpawn = true;
         waveCount = waveStartnumber;
-        maxEnemySpawn = 20 + difficulty;
+        maxEnemySpawn = 30;
         enemiesToKill = maxEnemySpawn;
         killCount = 0;
         isWaveFinished = false;
@@ -79,6 +86,8 @@ public class StageManager : MonoBehaviour
             stages[0].SetActive(true);
             stages[1].SetActive(false);
         }
+        
+        
 
     }
 
@@ -100,54 +109,63 @@ public class StageManager : MonoBehaviour
         {
             if (!isWaveFinished)
             {
-                
-                cooldownTimer = 0.5f;
+                cooldownTimer = 0.25f;
                 waveCount += 1;
                 killCount = 0;
-                canSpawn = false;
                 spawnCount = 0;
                 waveWeight = 0;
+                enemyCount = 0;
                 if (waveCount % 1 == 0)
                 {
-                    maxEnemySpawn += 5;
-                    GameObject port = Instantiate(portals[Random.Range(0, portals.Length)], player.transform.position+ new Vector3(0,1,2), Quaternion.identity);
+                    StatueOfProgression.SetActive(false);
+                    spawnTimer -= 0.015f;
+                    speedIncrease += 0.01f;
+                    maxEnemySpawn += 15;
                     int skillpoint = PlayerPrefs.GetInt("currentSkillPoints");
                     PlayerPrefs.SetInt("currentSkillPoints", skillpoint + 1);
-                    fxMusic.PlayOneShot(fx[0]);
-
+                    
+                   
+                    
 
                 }
                 if (waveCount % 2 == 0)
                 {
-                    
-                    damageIncrease += 0.02f;
-                    speedIncrease += 0.06f;
-                    hpAddition += 5f;
-                    spawnTimer -= 0.015f;
+                    difficulty += 2;
+                    canSpawn = false;
+                    damageIncrease += 0.005f;
+                    hpAddition += 5;
+                    StatueOfProgression.SetActive(true);
+                    fxMusic.PlayOneShot(fx[0]);
 
+                }
+                if (waveCount % 3 == 0)
+                {
+                    enemyVariationMax += 1;
+                    if (!StatueOfProgression.activeInHierarchy)
+                    {
+                        for (int a = 0; a < waveCount; a++)
+                        {
+                            GameObject extraEnemy = Instantiate(additionalEnemies[Random.Range(0, additionalEnemies.Length)], player.transform.position + new Vector3(Random.Range(-10,10),0, Random.Range(-10,10)), Quaternion.identity);
+                        }
+                    }
+
+                    
 
                 }
                 
-               
-             
                 
                 if (waveCount % 5 == 0)
                 {
-                    enemyVariationMax += 1;
-                    int skillpoint = PlayerPrefs.GetInt("currentSkillPoints");
-                    GameObject boss = Instantiate(bosses[Random.Range(0, bosses.Length)], player.transform.position + new Vector3(0,0,10f), Quaternion.identity);
-                    difficulty += 5;
+                    //canSpawn = false;
+                    //GameObject port = Instantiate(portals[Random.Range(0, portals.Length)], player.transform.position+ new Vector3(0,1,2), Quaternion.identity);
+                    //GameObject boss = Instantiate(bosses[Random.Range(0, bosses.Length)], player.transform.position + new Vector3(0,0,10f), Quaternion.identity);
                     maxEnemySpawn += difficulty;
+                    hpAddition += 15;
                 }
-                
                 enemiesToKill = maxEnemySpawn;
             }
         }
-
-        if (spawnCount >= maxEnemySpawn)
-        {
-            canSpawn = false;
-        }
+        
 
         if (waveWeight >= 300)
         {
@@ -156,23 +174,23 @@ public class StageManager : MonoBehaviour
             enemiesToKill = spawnCount;
         }
 
-        if (maxEnemySpawn >= 200)
+        if (maxEnemySpawn >= 500)
         {
-            maxEnemySpawn = 200;
+            maxEnemySpawn = 500;
             enemiesToKill = maxEnemySpawn;
         }
         
 
-        if (spawnTimer <= 0.3f)
+        if (spawnTimer <= 0.01f)
         {
-            spawnTimer = 0.3f;
+            spawnTimer = 0.01f;
         }
 
 
         StageTimer();
-        if (enemyVariationMax > 8)
+        if (enemyVariationMax > 4)
         {
-            enemyVariationMax = 8;
+            enemyVariationMax = 4;
         }
     }
 

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 133b72524a331cf4fa5b33871e73806e, type: 3}
+  m_Name: Yellow Minute
+  m_EditorClassIdentifier: Assembly-CSharp::CraftingItemSO
+  greenHerbReq: 0
+  redHerbReq: 0
+  yellowHerbReq: 5
+  blueHerbReq: 0
+  isGreenPotion: 0
+  isRedPotion: 0
+  isBluePotion: 0
+  isYellowPotion: 1
+  playerStatGreen: 0
+  playerStatRed: 0
+  playerStatBlue: 0
+  playerStatYellow: 0
+  description: --------
+  potionName: Yellow Minute
+  toxicityAddition: 35
+  maxHpAmount: 0
+  defenceAmount: 0
+  hpRegAmount: 0
+  potionTexture: {fileID: 0}

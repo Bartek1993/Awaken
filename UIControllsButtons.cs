@@ -20,7 +20,7 @@ public class UIControllsButtons : MonoBehaviour
     public int magicIdentity;
     public GameObject closeCam, farCam;
     public bool camSwitched;
-    public LayerMask treasureMask, portalMask;
+    public LayerMask treasureMask, InterractlMask;
     public Text chestPrice;
     public GameObject chestPriceBanner;
     public GameObject SlashIndicator;
@@ -48,30 +48,15 @@ public class UIControllsButtons : MonoBehaviour
             attackID = 0;
         }
         animator.SetInteger("attackID", attackID);
-        Collider [] colliders = Physics.OverlapSphere(Player.transform.position,2f, treasureMask);
-        if (colliders.Length > 0)
+        Collider[] colliders2 = Physics.OverlapSphere(Player.transform.position,2f, InterractlMask);
+        if (colliders2.Length > 0)
         {
-            interactButton.GetComponentInChildren<Text>().text = "OPEN";
-            chestPriceBanner.SetActive(true);
+           // interactButton.GetComponentInChildren<Text>().text = "ENTER";
             interactButton.gameObject.SetActive(true);
-            chestPrice.gameObject.SetActive(true);
-            foreach (var collider1 in colliders)
-            {
-                chestPrice.text = "REQUIRED " + collider1.GetComponent<Chest>().cost + " COINS";
-            }
         }
         else
         {
-            chestPriceBanner.SetActive(false);
-            chestPrice.gameObject.SetActive(false);
             interactButton.gameObject.SetActive(false);
-        }
-        
-        Collider[] colliders2 = Physics.OverlapSphere(Player.transform.position,2f, portalMask);
-        if (colliders2.Length > 0)
-        {
-            interactButton.GetComponentInChildren<Text>().text = "ENTER";
-            interactButton.gameObject.SetActive(true);
         }
     }
 
@@ -92,6 +77,17 @@ public class UIControllsButtons : MonoBehaviour
             animator.SetTrigger("roll");
             StartCoroutine("Roll");
         }
+    }
+
+    private IEnumerator RollSpeed()
+    {
+        float rollTimer = 0;
+        while (rollTimer < 1f)
+        {
+            rollTimer += Time.deltaTime;
+            Player.transform.position = Vector3.Lerp(Player.transform.position,Player.transform.position + Vector3.forward * 5,1f * Time.deltaTime);
+        }
+        yield return null;
     }
 
     public void onSlashDash()
@@ -126,7 +122,9 @@ public class UIControllsButtons : MonoBehaviour
     public IEnumerator Roll()
     {
         yield return new WaitForSeconds(0.1f);
+        
         rollButton.interactable = false;
+        Player.GetComponent<PlayerStats>().canTakeDamage = false;
         yield return new WaitForSeconds(Player.GetComponent<PlayerStats>().invisibilityFramesRoll);
         Player.GetComponent<PlayerStats>().canTakeDamage = true;
         float timer = 0;

@@ -16,9 +16,9 @@ MonoBehaviour:
   isPernament: 0
   cardLevel: 1
   PowerUpName: BASE ATTACK
-  PowerUpDescription: PHYSICAL POWER + 25%
+  PowerUpDescription: PHYSICAL POWER UP
   PowerUpColor: {r: 0.5924529, g: 0, b: 0, a: 1}
-  baseAttack: 0.25
+  baseAttack: 0.15
   critDamageMultiplier: 0
   critChance: 0
   baseHp: 0
@@ -45,3 +45,7 @@ MonoBehaviour:
   evadeChance: 0
   lifestealamount: 0
   lifestealchance: 0
+  expMultiplier: 0
+  piercePower: 0
+  magicCritRate: 0
+  magicCritDamage: 0

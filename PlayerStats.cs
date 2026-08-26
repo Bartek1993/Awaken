@@ -37,7 +37,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public float iceChance, fireChance;
     public GameObject deathScreen;
     public Text deathScreenText;
-    public float magicCooldown, magicStrength;
+    public float magicCooldown, magicStrength, magicCritRate, magicCritDamage;
     public float staminaCoolDown;
     public StageProperties stageProperties;
     public float magnetDistance;
@@ -48,9 +48,24 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         stageExtraStunTime, stageExtraFirePower,stageExtraFrozenTime, stageExtraEarthPower, stageExtraThunderPower,
         stageExtraProjectileRange, stageExtraProjectileSpeed, stageExtraRegenRate, stageExtraLifeStealChance, stageExtraLifeStealAmount,
         stageExtraMagnetDistance, stageExtraKnockBackStrength, stageExtraCriticalChance, stageExtraCriticalDamagePower, stageExtraEvadeChance,
-        stageExtraDefence, stageExtraInviAfterDamage, stageExtraMagicDistance, stageExtraExpMultiplier;
+        stageExtraDefence, stageExtraInviAfterDamage, stageExtraMagicDistance, stageExtraExpMultiplier, extraPiercePower, magicExtraCriticalRate,
+        magicExtraCriticalDamage;
+
+    public float fireOrbSpeed = 5f;
+    public float iceOrbSpeed = 5f;
+    public float thunderOrbSpeed = 5f;
+    public float piercePower;
+    public bool isStaticHitBox;
     
-    
+    [Tooltip("0 for green, 1 for red, 2 for yellow, 3 for blue")]
+    public int [] potionsOwned;
+    [Tooltip("0 for green, 1 for red, 2 for yellow, 3 for blue")]
+    public int[] herbsOwned;
+    public bool playerStatGreen, playerStatRed, playerStatYellow, playerStatBlue;
+    public float greenStatTimer,  redStatTimer, yellowStatTimer, blueStatTimer;
+    public float toxicityMeterMax, curentToxicity, toxicityDegRate, toxicityAddition, toxicityThreshold;
+    public bool setGreenTimer, setRedTimer, setYellowTimer, setBlueTimer;
+    public float potionExtraHpAmount, potionExtraHpRegAmount, potionExtraDefenceAmount, potionExtraDamage, potionExtraCriticalDamage, potionExtraCriticalChance;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -67,46 +82,52 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
 
     public void SetPlayerStats()
     {
-      
+        toxicityMeterMax = 50 + PlayerPrefs.GetFloat("ToxicityMax");
+        toxicityThreshold = (toxicityMeterMax * 0.9f) + PlayerPrefs.GetFloat("ToxicityThreshold");
+        toxicityDegRate = 0.25f;
+        piercePower = 0.15f + PlayerPrefs.GetFloat("PiercePower") + extraPiercePower;
         maxMana = 50 + PlayerPrefs.GetFloat("maxMp");
         mana = maxMana;
-        magicStrength = 1 +  PlayerPrefs.GetFloat("magicPower");
+        magicStrength = 3f +  PlayerPrefs.GetFloat("magicPower");
         manaRegenRate = 2f + PlayerPrefs.GetFloat("mpRegRate");
+        magicCritRate = 0.001f + magicExtraCriticalRate + PlayerPrefs.GetFloat("MagicCriticalChance");
+        magicCritDamage = 1.15f + magicExtraCriticalRate + PlayerPrefs.GetFloat("MagicCriticalDamage");
         AOEDistance = 5f + stageExtraMagicDistance;
-        float basmagiccooldown = 6;
+        float basmagiccooldown = 16;
         magicCooldown = basmagiccooldown - PlayerPrefs.GetFloat("magicCooldown");
         iceChance = 0.01f +  PlayerPrefs.GetFloat("iceChance") + stageExtraIceChance;
         fireChance = 0.01f  +  PlayerPrefs.GetFloat("fireChance") + stageExtraFireChance;
-        enemyStunTime = 0.25f + stageExtraStunTime;
+        enemyStunTime = 0.15f + stageExtraStunTime;
         canTakeDamage = true;
         moveSpeed = PlayerPrefs.GetFloat("moveSpeed");
-        animator.speed = 0.45f+ moveSpeed + stageExtraSpeed;
+        animator.speed = 0.42f+ moveSpeed + stageExtraSpeed;
         comboRank = 1;
         comboMeterMaxAmountMax = 100;
-        fireDamage = 1.5f * magicStrength + stageExtraFirePower;
-        iceDamage = 1.5f *  magicStrength;
-        thunderDamage = 1.5f * magicStrength + stageExtraThunderPower;
-        earthDamage = 1.5f * magicStrength + stageExtraEarthPower;
+        fireDamage = 1f * magicStrength + stageExtraFirePower;
+        iceDamage = 1f *  magicStrength;
+        thunderDamage = 1f * magicStrength + stageExtraThunderPower;
+        earthDamage = 1f * magicStrength + stageExtraEarthPower;
         maxHp = 100 + PlayerPrefs.GetFloat("maxHp") + stageExtraMaxHp;
         hpRegenRate = 0.0f + PlayerPrefs.GetFloat("hpRegRate") + stageExtraRegenRate;
-        baseDamage = 7.5f + PlayerPrefs.GetFloat("physicalAttack") + stageExtraDamage;
-        projectileRange = 5.5f + PlayerPrefs.GetFloat("weaponRange") + stageExtraProjectileRange;
-        projectileSpeed = 4f  + PlayerPrefs.GetFloat("weaponReach") + stageExtraProjectileSpeed;
+        baseDamage = 5f + PlayerPrefs.GetFloat("physicalAttack") + stageExtraDamage;
+        projectileRange = 6f + PlayerPrefs.GetFloat("weaponRange") + stageExtraProjectileRange;
+        projectileSpeed = 2.5f  + PlayerPrefs.GetFloat("weaponReach") + stageExtraProjectileSpeed;
         maxCritChance = 0.01f +  PlayerPrefs.GetFloat("criticalChance") + stageExtraCriticalChance;
-        critDamageMultiplier = 1.95f +  PlayerPrefs.GetFloat("criticalDamage") +  stageExtraCriticalDamagePower;
-        invisibilityFramesRoll = 1f;
+        critDamageMultiplier = 1.1f +  PlayerPrefs.GetFloat("criticalDamage") +  stageExtraCriticalDamagePower;
+        invisibilityFramesRoll = 0.75f;
         invisibilityFramesAfterDamage = 0.5f + stageExtraInviAfterDamage;
-        float basestamina = 3;
+        float basestamina = 4f;
         staminaCoolDown = basestamina -  PlayerPrefs.GetFloat("staminaCoolDown");
         defence = 1f + stageExtraDefence;
-        lifestealamount = 10 + stageExtraLifeStealAmount;
+        lifestealamount = 0.25f + stageExtraLifeStealAmount;
         thunderChance = 0.01f;
         lifeStealChance = 0.005f + stageExtraLifeStealChance;
-        frozenTimer = 1f + stageExtraFrozenTime;
-        knockBasckStrength = 150 + stageExtraKnockBackStrength;
+        frozenTimer = 1.5f + stageExtraFrozenTime;
+        knockBasckStrength = 170 + stageExtraKnockBackStrength;
         evadeChance = 0.005f + stageExtraEvadeChance;
-        magnetDistance = 2f + stageExtraMagnetDistance;
+        magnetDistance = 2.5f + stageExtraMagnetDistance;
         expMultiplier = 1f + stageExtraExpMultiplier;
+        
     }
 
     // Update is called once per frame
@@ -118,6 +139,66 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         SetBaseAttributes();
         ComboMeterSetup();
         OnDeathScreen();
+        SetPlayerBoostStatus();
+        
+
+
+    }
+
+    /// <summary>
+    /// FOR NOW IT'S OK, NEED TO SEPARATE STATUSES LATER
+    /// </summary>
+    public void SetPlayerBoostStatus()
+    {
+        if (setGreenTimer)
+        {
+            greenStatTimer -= 1 *  Time.deltaTime;
+            if (greenStatTimer <= 0)
+            {
+                setGreenTimer = false;
+                RemovePotionStatus();
+            }
+        }
+        
+        if (setRedTimer)
+        {
+            redStatTimer -= 1 *  Time.deltaTime;
+            if (greenStatTimer <= 0)
+            {
+                setRedTimer = false;
+                RemovePotionStatus();
+            }
+        }
+    }
+
+    private void RemovePotionStatus()
+    {
+        maxHp -= potionExtraHpAmount;
+        hpRegenRate -= potionExtraHpRegAmount;
+        defence -= potionExtraDefenceAmount;
+        baseDamage -= potionExtraDamage;
+        critDamageMultiplier -=  potionExtraCriticalDamage;
+        maxCritChance -= potionExtraCriticalChance;
+        
+    }
+
+    public void AddPotionStatus(float toxicity,float potionMaxHp, float potionDefence, float potionRegRate, float physicalDamage, float critDamageAmount, float critChanceAmount )
+    {
+        curentToxicity += toxicity;
+        potionExtraHpAmount += potionMaxHp;
+        potionExtraDefenceAmount += potionDefence;
+        potionExtraHpRegAmount += potionRegRate;
+        ////////
+        potionExtraDamage += physicalDamage;
+        potionExtraCriticalDamage  += critDamageAmount;
+        potionExtraCriticalChance += critChanceAmount;
+        
+        maxHp += potionExtraHpAmount;
+        defence += potionExtraDefenceAmount;
+        baseDamage += potionExtraDamage;
+        critDamageMultiplier +=  potionExtraCriticalDamage;
+        maxCritChance += potionExtraCriticalChance;
+        
 
     }
 
@@ -176,15 +257,26 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
             stageProperties.isPaused =  true;
             stageProperties.isLevelingUp = true;
             exp = 0;
-            maxExp += 25;
+            maxExp += 50;
+        }
+
+        curentToxicity -= toxicityDegRate *  Time.deltaTime;
+        if (curentToxicity <= 0)
+        {
+            curentToxicity = 0;
+        }
+
+        if (curentToxicity > toxicityThreshold)
+        {
+            hp -= maxHp * 0.025f * Time.deltaTime;
         }
 
     }
     private void SetAnimator()
     {
-        if (animator.speed > 1.5f)
+        if (animator.speed > 1.7f)
         {
-            animator.speed = 1.5f;
+            animator.speed = 1.7f;
         }
     }
 

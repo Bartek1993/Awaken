@@ -1,16 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using a;
+using FischlWorks_FogWar;
+using PixeLadder.EasyTransition;
+using PixeLadder.EasyTransition.Effects;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class StageProperties : MonoBehaviour
 {
+    public GameObject player;
     public bool isPaused = false;
     public bool isLevelingUp = false;
     public bool isInPauseMenu = false;
     public bool isDisplayingStats;
     public GameObject mainPauseBar;
-    public GameObject playerLevelUpWindow, pauseMenu, displayStats;
+    public GameObject playerLevelUpWindow, pauseMenu, displayStats, craftWindow, inventoryWindow;
     public Text rewardText, rewardDescription;
     public GameObject rewardWindow;
     public PlayerStats playerStats;
@@ -21,11 +26,25 @@ public class StageProperties : MonoBehaviour
     public float timeTillOverride;
     public AudioSource audioSource;
     public AudioClip[] clips;
+    public GameObject transitionScreen;
+    public Transform startPosition;
+    public bool isInDialogue = false;
+    public GameObject playerUI;
+    public GameObject dialogueUI;
+    public bool [] path;
+    public bool currentPath;
+    public Color [] stageAmbientColors;
+    public Light ambientLight;
+    public csFogWar fogOfWar;
+    public Crafting_Panel craftingPanel;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        SetStageAmbient();
+        player = GameObject.FindGameObjectWithTag("Player");
         playerStats = FindFirstObjectByType<PlayerStats>();
         stageManager = FindFirstObjectByType<StageManager>();
+        craftingPanel = FindFirstObjectByType<Crafting_Panel>();
         rewardWindow.SetActive(false);
         rewardDescription.gameObject.SetActive(false);
         rewardText.gameObject.SetActive(false);
@@ -59,6 +78,9 @@ public class StageProperties : MonoBehaviour
         pauseMenu.SetActive(isPaused);
         displayStats.SetActive(isDisplayingStats);
         mainPauseBar.SetActive(isInPauseMenu);
+        playerUI.gameObject.SetActive(!isInDialogue);
+        dialogueUI.gameObject.SetActive(isInDialogue);
+        
     }
 
 
@@ -68,6 +90,47 @@ public class StageProperties : MonoBehaviour
         isDisplayingStats = !isDisplayingStats;
         GetPlayerStats();
        
+    }
+
+    public void SetStageAmbient()
+    {
+        int startPath = Random.Range(0, path.Length);
+        path[startPath] = true;
+        currentPath = path[startPath];
+        if (path[0])
+        {
+            RenderSettings.fogColor = stageAmbientColors[0];
+            //fogOfWar.fogColor = stageAmbientColors[0];
+            //ambientLight.color = stageAmbientColors[0];
+        }
+
+        if (path[1])
+        {
+            RenderSettings.fogColor = stageAmbientColors[1];
+            //fogOfWar.fogColor = stageAmbientColors[1];
+            //mbientLight.color = stageAmbientColors[1];
+        }
+
+        if (path[2])
+        {
+            RenderSettings.fogColor = stageAmbientColors[2];
+            //fogOfWar.fogColor = stageAmbientColors[2];
+            //ambientLight.color = stageAmbientColors[2];
+        }
+
+        if (path[3])
+        {
+            RenderSettings.fogColor = stageAmbientColors[3];
+            //fogOfWar.fogColor = stageAmbientColors[3];
+            //mbientLight.color = stageAmbientColors[3];
+        }
+
+        if (path[4])
+        {
+            RenderSettings.fogColor = stageAmbientColors[4];
+            //fogOfWar.fogColor = stageAmbientColors[4];
+            //ambientLight.color = stageAmbientColors[4];
+        }
     }
 
     public void PauseMenuBarSwitch()
@@ -128,5 +191,70 @@ public class StageProperties : MonoBehaviour
     public void PlayCheerVoid()
     {
         audioSource.PlayOneShot(clips[Random.Range(0, clips.Length)]);
+    }
+
+    public void LoadNewWave()
+    {
+        StartCoroutine("LoadNewWaveCoroutine");
+    }
+
+    private IEnumerator LoadNewWaveCoroutine()
+    {
+        
+        transitionScreen.SetActive(true);
+        isPaused = true;
+        stageManager.stages[0].SetActive(false);
+        for (int i = 0; i < path.Length; i++)
+        {
+            path[i] = false;
+        }
+
+        player.transform.position = startPosition.position;
+        fogOfWar.keepRevealedTiles = false;
+        yield return new WaitForSecondsRealtime(1f);
+        fogOfWar.keepRevealedTiles = true;
+        stageManager.stages[0].SetActive(true);
+        isPaused = false;
+        stageManager.canSpawn = true;
+        stageManager.StatueOfProgression.SetActive(false);
+        System.GC.Collect();
+        yield return new WaitForSecondsRealtime(0.2f);
+        SetStageAmbient();
+        transitionScreen.SetActive(false);
+        
+    }
+
+    public void OpenChoiceDialogueMenu()
+    {
+        dialogueUI.gameObject.SetActive(true);
+    }
+
+    public void OnClose(GameObject go)
+    {
+        go.SetActive(false);
+    }
+
+    public void OnCraftWindowOpen()
+    {
+        
+        inventoryWindow.SetActive(false);
+        craftWindow.SetActive(true);
+        displayStats.SetActive(false);
+    }
+
+    public void OnDisplayStatsOpen()
+    {
+        inventoryWindow.SetActive(false);
+        craftWindow.SetActive(false);
+        displayStats.SetActive(true);
+    }
+
+    public void OnDisplayInventoryOpen()
+    {
+        
+        inventoryWindow.SetActive(true);
+        craftingPanel.ClearReqPanel();
+        craftWindow.SetActive(false);
+        displayStats.SetActive(false);
     }
 }

@@ -26,7 +26,8 @@ public class ScripablePowerUP : ScriptableObject
     [Tooltip("Player Speed and Movement Attributes")]
     public float invisibilityFramesRoll, invisibilityFramesAfterDamage, playerSpeed;
     [Tooltip("SPECIAL Attributes")] public float enemyStopTime, iceChance, frozenTime, fireChance, magnetDistance, AOEDistance, magicPower,
-        iceDamage, thunderDamage, earthDamage, fireDamage, knockbackStrength, evadeChance, lifestealamount, lifestealchance, expMultiplier;
+        iceDamage, thunderDamage, earthDamage, fireDamage, knockbackStrength, evadeChance, lifestealamount, lifestealchance, expMultiplier, piercePower,
+        magicCritRate, magicCritDamage;
     
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -64,6 +65,9 @@ public class ScripablePowerUP : ScriptableObject
         playerStats.stageExtraLifeStealAmount  += lifestealamount;
         playerStats.stageExtraLifeStealChance += lifestealchance;
         playerStats.stageExtraExpMultiplier += expMultiplier;
+        playerStats.extraPiercePower += piercePower;
+        playerStats.magicExtraCriticalRate += magicCritRate;
+        playerStats.magicExtraCriticalDamage += magicCritDamage;
         playerStats.SetPlayerStats();
         Debug.Log("PowerUp Clicked");
         

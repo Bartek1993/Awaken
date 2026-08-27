@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Invector.vCharacterController;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,6 +25,7 @@ public class UIControllsButtons : MonoBehaviour
     public Text chestPrice;
     public GameObject chestPriceBanner;
     public GameObject SlashIndicator;
+    public int maxDashBeforeCooldown;
     void Start()
     {
         camSwitched = false;
@@ -72,22 +74,12 @@ public class UIControllsButtons : MonoBehaviour
 
     public void onRoll()
     {
-        if (!isAttacking)
+        if (!isAttacking && Player.GetComponent<vThirdPersonController>().inputMagnitude > 0.65f)
         {
+            Player.GetComponent<PlayerStats>().currentDashBeforeCooldown -= 1;
             animator.SetTrigger("roll");
             StartCoroutine("Roll");
         }
-    }
-
-    private IEnumerator RollSpeed()
-    {
-        float rollTimer = 0;
-        while (rollTimer < 1f)
-        {
-            rollTimer += Time.deltaTime;
-            Player.transform.position = Vector3.Lerp(Player.transform.position,Player.transform.position + Vector3.forward * 5,1f * Time.deltaTime);
-        }
-        yield return null;
     }
 
     public void onSlashDash()
@@ -121,21 +113,45 @@ public class UIControllsButtons : MonoBehaviour
 
     public IEnumerator Roll()
     {
-        yield return new WaitForSeconds(0.1f);
-        
         rollButton.interactable = false;
+        yield return new WaitForSeconds(0.25f);
+        maxDashBeforeCooldown = Player.GetComponent<PlayerStats>().currentDashBeforeCooldown;
+        Vector3 playerPosition = Player.transform.position;
+        Vector3 playerDirection = new Vector3(0, 0, playerPosition.z + 25f);
+        float dashTimer = 0;
+        while (dashTimer < 0.15f)
+        {
+            dashTimer += Time.deltaTime;
+            Player.transform.Translate(playerDirection  * Time.deltaTime);
+           //Player.GetComponent<Rigidbody>().AddForce(playerDirection * Time.deltaTime, ForceMode.VelocityChange);
+            yield return null;
+        }
+        yield return new WaitForSeconds(0.1f);
         Player.GetComponent<PlayerStats>().canTakeDamage = false;
         yield return new WaitForSeconds(Player.GetComponent<PlayerStats>().invisibilityFramesRoll);
         Player.GetComponent<PlayerStats>().canTakeDamage = true;
         float timer = 0;
-        while (timer < Player.GetComponent<PlayerStats>().staminaCoolDown)
+        if (maxDashBeforeCooldown != 0)
         {
-            animator.ResetTrigger("roll");
-            rollButton.GetComponent<Image>().fillAmount =  Mathf.Clamp01(timer / Player.GetComponent<PlayerStats>().staminaCoolDown);
-            timer += Time.deltaTime;
-            canRoll = false;
-            yield return null;
+            
         }
+        else
+        {
+            ///CHANGE THIS LATER////
+            
+            while (timer < Player.GetComponent<PlayerStats>().staminaCoolDown)
+            {
+                Player.GetComponent<PlayerStats>().currentDashBeforeCooldown = Player.GetComponent<PlayerStats>().maxDashBeforeCooldown;
+                animator.ResetTrigger("roll");
+                rollButton.GetComponent<Image>().fillAmount =  Mathf.Clamp01(timer / Player.GetComponent<PlayerStats>().staminaCoolDown);
+                timer += Time.deltaTime;
+                canRoll = false;
+                yield return null;
+            }
+        }
+
+      
+       
         canRoll = true;
         rollButton.interactable = true;
     }
@@ -206,6 +222,20 @@ public class UIControllsButtons : MonoBehaviour
         interact = true;
         yield return new WaitForSeconds(0.5f);
         interact = false;
+    }
+
+    public void OnAttackButtonRelease()
+    {
+        PlayerStats stats = FindFirstObjectByType<PlayerStats>();
+        if (stats.bravery is > 10 and< 25)
+        {
+            stats.animator.SetTrigger("specialattack");
+        }
+        
+        if (stats.bravery is > 25)
+        {
+            stats.animator.SetTrigger("specialattack2");
+        }
     }
 
 

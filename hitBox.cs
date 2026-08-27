@@ -132,7 +132,8 @@ public class hitBox : MonoBehaviour
                 hitFX[0].SetActive(true);
             }
 
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage(damage + player.GetComponent<PlayerStats>().bravery * 0.05f);
+            player.GetComponent<PlayerStats>().bravery += 0.5f;
         }
     }
 
@@ -140,11 +141,11 @@ public class hitBox : MonoBehaviour
     {
         foreach (var VARIABLE in basicMultiChannelPerlin)
         {
-            VARIABLE.FrequencyGain = 40f;
-            VARIABLE.AmplitudeGain = 1.2f;
+            VARIABLE.FrequencyGain = 45f;
+            VARIABLE.AmplitudeGain = 1.6f;
                 ;
         }
-        yield return new WaitForSecondsRealtime(0.075f);
+        yield return new WaitForSecondsRealtime(0.045f);
         foreach (var VARIABLE in basicMultiChannelPerlin)
         {
             VARIABLE.AmplitudeGain = 1f;

@@ -19,7 +19,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public float mana, maxMana, manaRegenRate, AOEDistance;
     public float exp, maxExp;
     public float defence;
-    public Image hpBar;
+    public Image hpBar, toxicityBar, braveryBar;
     public float projectileRange, projectileSpeed;
     public float fireDamage, iceDamage, thunderDamage, earthDamage;
     public float maxCritChance, critDamageMultiplier;
@@ -66,7 +66,10 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     public float toxicityMeterMax, curentToxicity, toxicityDegRate, toxicityAddition, toxicityThreshold;
     public bool setGreenTimer, setRedTimer, setYellowTimer, setBlueTimer;
     public float potionExtraHpAmount, potionExtraHpRegAmount, potionExtraDefenceAmount, potionExtraDamage, potionExtraCriticalDamage, potionExtraCriticalChance;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public int maxDashBeforeCooldown = 2;
+    public int currentDashBeforeCooldown;
+    public bool isAttacking;
+    public float bravery;
     void Start()
     {
         stageProperties = FindFirstObjectByType<StageProperties>();
@@ -76,6 +79,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         hp = maxHp;
         exp = 0;
         maxExp = 50;
+        currentDashBeforeCooldown = maxDashBeforeCooldown;
 
 
     }
@@ -84,7 +88,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
     {
         toxicityMeterMax = 50 + PlayerPrefs.GetFloat("ToxicityMax");
         toxicityThreshold = (toxicityMeterMax * 0.9f) + PlayerPrefs.GetFloat("ToxicityThreshold");
-        toxicityDegRate = 0.25f;
+        toxicityDegRate = 0.75f;
         piercePower = 0.15f + PlayerPrefs.GetFloat("PiercePower") + extraPiercePower;
         maxMana = 50 + PlayerPrefs.GetFloat("maxMp");
         mana = maxMana;
@@ -110,7 +114,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         maxHp = 100 + PlayerPrefs.GetFloat("maxHp") + stageExtraMaxHp;
         hpRegenRate = 0.0f + PlayerPrefs.GetFloat("hpRegRate") + stageExtraRegenRate;
         baseDamage = 5f + PlayerPrefs.GetFloat("physicalAttack") + stageExtraDamage;
-        projectileRange = 6f + PlayerPrefs.GetFloat("weaponRange") + stageExtraProjectileRange;
+        projectileRange = 10f + PlayerPrefs.GetFloat("weaponRange") + stageExtraProjectileRange;
         projectileSpeed = 2.5f  + PlayerPrefs.GetFloat("weaponReach") + stageExtraProjectileSpeed;
         maxCritChance = 0.01f +  PlayerPrefs.GetFloat("criticalChance") + stageExtraCriticalChance;
         critDamageMultiplier = 1.1f +  PlayerPrefs.GetFloat("criticalDamage") +  stageExtraCriticalDamagePower;
@@ -163,7 +167,7 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
         if (setRedTimer)
         {
             redStatTimer -= 1 *  Time.deltaTime;
-            if (greenStatTimer <= 0)
+            if (redStatTimer <= 0)
             {
                 setRedTimer = false;
                 RemovePotionStatus();
@@ -260,16 +264,41 @@ public class PlayerStats : MonoBehaviour, ICommonMethods
             maxExp += 50;
         }
 
+        toxicityBar.fillAmount = curentToxicity / toxicityMeterMax;
         curentToxicity -= toxicityDegRate *  Time.deltaTime;
         if (curentToxicity <= 0)
         {
             curentToxicity = 0;
         }
 
+        
         if (curentToxicity > toxicityThreshold)
         {
             hp -= maxHp * 0.025f * Time.deltaTime;
         }
+
+        isAttacking = FindFirstObjectByType<UIControllsButtons>().isAttacking;
+        if (isAttacking)
+        {
+            bravery += 10f * Time.deltaTime;
+        }
+        else
+        {
+            bravery -= 25 * Time.deltaTime;
+        }
+
+        if (bravery < 0)
+        {
+            bravery = 0;
+        }
+
+        if (bravery > 100)
+        {
+            bravery = 100;
+        }
+
+        braveryBar.fillAmount = bravery / 100f;
+
 
     }
     private void SetAnimator()

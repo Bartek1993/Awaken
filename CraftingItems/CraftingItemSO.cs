@@ -63,27 +63,28 @@ public class CraftingItemSO : ScriptableObject
     public void UseItem(PlayerStats playerStats)
     {
         playerStats.AddPotionStatus(toxicityAddition,maxHpAmount, defenceAmount, hpRegAmount, physicalDamage, critDamageAmount, critChanceAmount);
-        
-        playerStats.setGreenTimer = true;
+
+        playerStats.setGreenTimer = isGreenPotion;
+        playerStats.setRedTimer = isRedPotion;
         if (isGreenPotion)
         {
             playerStats.potionsOwned[0] -= 1;
-            playerStats.greenStatTimer += 30f;
+            playerStats.greenStatTimer += 20f;
         }
         if (isRedPotion)
         {
             playerStats.potionsOwned[1] -= 1;
-            playerStats.redStatTimer += 30f;
+            playerStats.redStatTimer += 20f;
         }
         if (isYellowPotion)
         {
             playerStats.potionsOwned[2] -= 1;
-            playerStats.yellowStatTimer += 30f;
+            playerStats.yellowStatTimer += 20f;
         }
         if (isBluePotion)
         {
             playerStats.potionsOwned[3] -= 1;
-            playerStats.blueStatTimer += 30f;
+            playerStats.blueStatTimer += 20f;
         }
     }
 

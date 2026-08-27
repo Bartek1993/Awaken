@@ -31,7 +31,10 @@ MonoBehaviour:
   maxHpAmount: 0
   defenceAmount: 0
   hpRegAmount: 0
-  potionTexture: {fileID: 21300000, guid: 71395603e0f00453cb28b9dcd0e67d59, type: 3}
+  physicalDamage: 0
+  critDamageAmount: 0
+  critChanceAmount: 0
+  potionTexture: {fileID: 266982522, guid: c1c5501a977b96a4a94d650638547168, type: 3}
   requiredMaterials:
   - {fileID: 21300000, guid: f79dd890a616f41a6a0e2045e1c83c12, type: 3}
   - {fileID: 21300000, guid: 17f63f20d11644ea9b288f3f0dc5b552, type: 3}

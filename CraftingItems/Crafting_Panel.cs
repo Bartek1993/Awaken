@@ -56,8 +56,10 @@ public class Crafting_Panel : MonoBehaviour
         {
             var go = Instantiate(inventoryItemButton, itemListParent.transform);
             go.GetComponent<CraftedItemButton>().itemSo = ownedPotions[a];
+            go.GetComponent<CraftedItemButton>().buttonIcon = ownedPotions[a].potionTexture;
             go.onClick.AddListener(() =>
             {
+                
                 go.GetComponent<CraftedItemButton>().OnClickItem();
             
             });

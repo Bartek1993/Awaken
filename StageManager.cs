@@ -55,7 +55,7 @@ public class StageManager : MonoBehaviour
     void Start()
     {
         StatueOfProgression.SetActive(false);
-        maxEnemyOnScreen = 50;
+        maxEnemyOnScreen = 5;
         hpAddition = 0;
         speedIncrease = 0.02f;
         stageProperties = FindFirstObjectByType<StageProperties>();
@@ -68,10 +68,10 @@ public class StageManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         spawnTimer = 0.5f;
         spawnRate = 1;
-        cooldownTimer = 0.5f;
+        cooldownTimer = 0.55f;
         canSpawn = true;
         waveCount = waveStartnumber;
-        maxEnemySpawn = 30;
+        maxEnemySpawn = 10;
         enemiesToKill = maxEnemySpawn;
         killCount = 0;
         isWaveFinished = false;
@@ -109,7 +109,7 @@ public class StageManager : MonoBehaviour
         {
             if (!isWaveFinished)
             {
-                cooldownTimer = 0.25f;
+                cooldownTimer -= 0.1f;
                 waveCount += 1;
                 killCount = 0;
                 spawnCount = 0;
@@ -132,8 +132,8 @@ public class StageManager : MonoBehaviour
                 {
                     difficulty += 2;
                     canSpawn = false;
-                    damageIncrease += 0.005f;
-                    hpAddition += 5;
+                    damageIncrease += 0.0025f;
+                    hpAddition += 10;
                     StatueOfProgression.SetActive(true);
                     fxMusic.PlayOneShot(fx[0]);
 
@@ -160,7 +160,7 @@ public class StageManager : MonoBehaviour
                     //GameObject port = Instantiate(portals[Random.Range(0, portals.Length)], player.transform.position+ new Vector3(0,1,2), Quaternion.identity);
                     //GameObject boss = Instantiate(bosses[Random.Range(0, bosses.Length)], player.transform.position + new Vector3(0,0,10f), Quaternion.identity);
                     maxEnemySpawn += difficulty;
-                    hpAddition += 15;
+                    hpAddition += 25;
                 }
                 enemiesToKill = maxEnemySpawn;
             }
@@ -173,10 +173,10 @@ public class StageManager : MonoBehaviour
             waveWeight = 300;
             enemiesToKill = spawnCount;
         }
-
-        if (maxEnemySpawn >= 500)
+        
+        if (maxEnemySpawn >= 200)
         {
-            maxEnemySpawn = 500;
+            maxEnemySpawn = 200;
             enemiesToKill = maxEnemySpawn;
         }
         
@@ -191,6 +191,11 @@ public class StageManager : MonoBehaviour
         if (enemyVariationMax > 4)
         {
             enemyVariationMax = 4;
+        }
+
+        if (cooldownTimer <= 0.05f)
+        {
+            cooldownTimer = 0.05f;
         }
     }
 
